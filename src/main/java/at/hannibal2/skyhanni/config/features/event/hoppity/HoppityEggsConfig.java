@@ -170,4 +170,9 @@ public class HoppityEggsConfig {
     @ConfigEditorBoolean
     @FeatureToggle
     public boolean petWarning = false;
+
+    @Expose
+    @ConfigOption(name = "Hoppity Call Warning", desc = "")
+    @Accordion
+    public HoppityCallWarningConfig hoppityCallWarning = new HoppityCallWarningConfig();
 }
