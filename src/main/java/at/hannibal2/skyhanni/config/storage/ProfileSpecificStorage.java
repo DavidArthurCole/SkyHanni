@@ -13,6 +13,8 @@ import at.hannibal2.skyhanni.features.dungeon.DungeonFloor;
 import at.hannibal2.skyhanni.features.event.diana.DianaProfitTracker;
 import at.hannibal2.skyhanni.features.event.diana.MythologicalCreatureTracker;
 import at.hannibal2.skyhanni.features.event.hoppity.HoppityCollectionStats;
+import at.hannibal2.skyhanni.features.event.hoppity.HoppityEggType;
+import at.hannibal2.skyhanni.features.event.hoppity.HoppityRabbitRarity;
 import at.hannibal2.skyhanni.features.event.jerry.frozentreasure.FrozenTreasureTracker;
 import at.hannibal2.skyhanni.features.fame.UpgradeReminder;
 import at.hannibal2.skyhanni.features.fishing.tracker.FishingProfitTracker;
@@ -28,6 +30,7 @@ import at.hannibal2.skyhanni.features.garden.fortuneguide.FarmingItems;
 import at.hannibal2.skyhanni.features.garden.pests.PestProfitTracker;
 import at.hannibal2.skyhanni.features.garden.pests.VinylType;
 import at.hannibal2.skyhanni.features.garden.visitor.VisitorReward;
+import at.hannibal2.skyhanni.features.inventory.caketracker.CakeTracker;
 import at.hannibal2.skyhanni.features.inventory.chocolatefactory.ChocolateFactoryStrayTracker;
 import at.hannibal2.skyhanni.features.inventory.wardrobe.WardrobeAPI;
 import at.hannibal2.skyhanni.features.mining.MineshaftPityDisplay;
@@ -466,6 +469,9 @@ public class ProfileSpecificStorage {
     }
 
     @Expose
+    public CakeTracker.Data cakeTracker = new CakeTracker.Data();
+
+    @Expose
     public PowderTracker.Data powderTracker = new PowderTracker.Data();
 
     @Expose
@@ -666,4 +672,38 @@ public class ProfileSpecificStorage {
 
     @Expose
     public UpgradeReminder.CommunityShopUpgrade communityShopProfileUpgrade = null;
+
+    @Expose
+    public Map<Integer, HoppityEventStats> hoppityEventStats = new HashMap<>();
+
+    public static class HoppityEventStats {
+        @Expose
+        public Map<HoppityEggType, Integer> mealsFound = new HashMap<>();
+
+        @Expose
+        public Map<HoppityRabbitRarity, RabbitData> rabbitsFound = new HashMap<>();
+
+        public static class RabbitData {
+            @Expose
+            public int uniques = 0;
+
+            @Expose
+            public int dupes = 0;
+
+            @Expose
+            public int strays = 0;
+        }
+
+        @Expose
+        public long dupeChocolateGained = 0;
+
+        @Expose
+        public long strayChocolateGained = 0;
+
+        @Expose
+        public long millisInCf = 0;
+
+        @Expose
+        public boolean summarized = false;
+    }
 }

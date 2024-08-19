@@ -14,6 +14,11 @@ import io.github.notenoughupdates.moulconfig.annotations.ConfigOption;
 public class HoppityEggsConfig {
 
     @Expose
+    @ConfigOption(name = "Event Summary", desc = "")
+    @Accordion
+    public HoppityEventSummaryConfig eventSummary = new HoppityEventSummaryConfig();
+
+    @Expose
     @ConfigOption(name = "Hoppity Waypoints", desc = "Toggle guess waypoints for Hoppity's Hunt.")
     @ConfigEditorBoolean
     @FeatureToggle

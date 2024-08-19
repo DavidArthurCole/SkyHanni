@@ -147,6 +147,9 @@ object HypixelCommands {
 
     fun cb(uuid: String) {
         send("cb $uuid")
+
+    fun ahs(query: String) {
+        send("ahs $query")
     }
 
     private fun send(command: String) {
