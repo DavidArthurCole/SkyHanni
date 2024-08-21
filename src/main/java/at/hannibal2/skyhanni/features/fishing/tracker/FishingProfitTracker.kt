@@ -50,7 +50,8 @@ object FishingProfitTracker {
     private val tracker = SkyHanniItemTracker(
         "Fishing Profit Tracker",
         { Data() },
-        { it.fishing.fishingProfitTracker }) { drawDisplay(it) }
+        { it.fishing.fishingProfitTracker },
+        { drawDisplay(it) })
 
     class Data : ItemTrackerData() {
 

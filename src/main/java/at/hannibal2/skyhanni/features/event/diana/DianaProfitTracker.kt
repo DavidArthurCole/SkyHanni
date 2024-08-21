@@ -43,7 +43,8 @@ object DianaProfitTracker {
     private val tracker = SkyHanniItemTracker(
         "Diana Profit Tracker",
         { Data() },
-        { it.diana.dianaProfitTracker }) { drawDisplay(it) }
+        { it.diana.dianaProfitTracker },
+        { drawDisplay(it) })
 
     class Data : ItemTrackerData() {
 

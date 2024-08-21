@@ -55,8 +55,7 @@ object VerminTracker {
 
     private val config get() = RiftAPI.config.area.westVillage.verminTracker
 
-    private val tracker = SkyHanniTracker("Vermin Tracker", { Data() }, { it.rift.verminTracker })
-    { drawDisplay(it) }
+    private val tracker = SkyHanniTracker("Vermin Tracker", { Data() }, { it.rift.verminTracker }, { drawDisplay(it) })
 
     class Data : TrackerData() {
 

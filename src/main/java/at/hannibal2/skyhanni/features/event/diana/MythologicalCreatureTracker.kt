@@ -53,8 +53,7 @@ object MythologicalCreatureTracker {
     )
 
     private val tracker =
-        SkyHanniTracker("Mythological Creature Tracker", { Data() }, { it.diana.mythologicalMobTracker })
-        { drawDisplay(it) }
+        SkyHanniTracker("Mythological Creature Tracker", { Data() }, { it.diana.mythologicalMobTracker }, { drawDisplay(it) })
 
     class Data : TrackerData() {
 

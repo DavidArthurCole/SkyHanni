@@ -32,7 +32,8 @@ object ExcavatorProfitTracker {
     private val tracker = SkyHanniItemTracker(
         "Fossil Excavation Profit Tracker",
         { Data() },
-        { it.mining.fossilExcavatorProfitTracker }) { drawDisplay(it) }
+        { it.mining.fossilExcavatorProfitTracker },
+        { drawDisplay(it) })
 
     class Data : ItemTrackerData() {
         override fun resetItems() {

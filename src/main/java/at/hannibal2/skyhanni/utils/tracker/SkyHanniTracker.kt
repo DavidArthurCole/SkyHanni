@@ -25,6 +25,7 @@ open class SkyHanniTracker<Data : TrackerData>(
     private val getStorage: (ProfileSpecificStorage) -> Data,
     // TODO change to renderable
     private val drawDisplay: (Data) -> List<List<Any>>,
+    private val sessionTracking: Boolean = true,
 ) {
 
     private var inventoryOpen = false
@@ -62,10 +63,10 @@ open class SkyHanniTracker<Data : TrackerData>(
 
     fun modify(mode: DisplayMode, modifyFunction: (Data) -> Unit) {
         val storage = ProfileStorageData.profileSpecific ?: return
-        val data: Data = when (mode) {
+        val data: Data = if (sessionTracking) when (mode) {
             DisplayMode.TOTAL -> storage.getTotal()
             DisplayMode.SESSION -> storage.getCurrentSession()
-        }
+        } else storage.getTotal()
         modifyFunction(data)
         update()
     }
@@ -98,11 +99,11 @@ open class SkyHanniTracker<Data : TrackerData>(
 
     private fun buildFinalDisplay(rawList: List<List<Any>>) = rawList.toMutableList().also {
         if (it.isEmpty()) return@also
-        if (inventoryOpen) {
+        if (inventoryOpen && sessionTracking) {
             it.add(1, buildDisplayModeView())
-        }
-        if (inventoryOpen && getDisplayMode() == DisplayMode.SESSION) {
-            it.addAsSingletonList(buildSessionResetButton())
+            if (getDisplayMode() == DisplayMode.SESSION) {
+                it.addAsSingletonList(buildSessionResetButton())
+            }
         }
     }
 

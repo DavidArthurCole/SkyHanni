@@ -44,7 +44,8 @@ object PestProfitTracker {
     private val tracker = SkyHanniItemTracker(
         "Pest Profit Tracker",
         { Data() },
-        { it.garden.pestProfitTracker }) { drawDisplay(it) }
+        { it.garden.pestProfitTracker },
+        { drawDisplay(it) })
 
     class Data : ItemTrackerData() {
         override fun resetItems() {

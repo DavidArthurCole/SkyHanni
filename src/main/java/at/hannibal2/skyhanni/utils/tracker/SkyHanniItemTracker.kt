@@ -23,7 +23,8 @@ class SkyHanniItemTracker<Data : ItemTrackerData>(
     createNewSession: () -> Data,
     getStorage: (ProfileSpecificStorage) -> Data,
     drawDisplay: (Data) -> List<List<Any>>,
-) : SkyHanniTracker<Data>(name, createNewSession, getStorage, drawDisplay) {
+    sessionTracking: Boolean = true,
+) : SkyHanniTracker<Data>(name, createNewSession, getStorage, drawDisplay, sessionTracking) {
 
     companion object {
 
