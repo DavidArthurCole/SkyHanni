@@ -4,6 +4,9 @@ import at.hannibal2.skyhanni.events.GuiContainerEvent
 import at.hannibal2.skyhanni.events.GuiRenderEvent
 import at.hannibal2.skyhanni.events.InventoryFullyOpenedEvent
 import at.hannibal2.skyhanni.events.SecondPassedEvent
+import at.hannibal2.skyhanni.features.event.hoppity.HoppityAPI
+import at.hannibal2.skyhanni.features.event.hoppity.HoppityEventSummary
+import at.hannibal2.skyhanni.features.event.hoppity.HoppityRabbitRarity
 import at.hannibal2.skyhanni.skyhannimodule.SkyHanniModule
 import at.hannibal2.skyhanni.utils.CollectionUtils.addAsSingletonList
 import at.hannibal2.skyhanni.utils.CollectionUtils.addOrPut
@@ -136,6 +139,11 @@ object ChocolateFactoryStrayTracker {
         tracker.modify { it.straysCaught.addOrPut(rarity, 1) }
         val extraTime = ChocolateFactoryAPI.timeUntilNeed(chocAmount + 1)
         tracker.modify { it.straysExtraChocMs.addOrPut(rarity, extraTime.inWholeMilliseconds) }
+        if (HoppityAPI.isHoppityEvent()) {
+            HoppityRabbitRarity.getByKey(rarity)?.let {
+                HoppityEventSummary.addStrayCaught(it, chocAmount)
+            }
+        }
     }
 
     private fun incrementGoldenType(typeCaught: String, amount: Int = 1) {
@@ -275,7 +283,6 @@ object ChocolateFactoryStrayTracker {
 
     @SubscribeEvent(priority = EventPriority.HIGH)
     fun onSlotClick(event: GuiContainerEvent.SlotClickEvent) {
-        if (!isEnabled()) return
         val index = event.slot?.slotIndex ?: return
         if (index == -999) return
         if (claimedStraysSlots.contains(index)) return
@@ -285,6 +292,9 @@ object ChocolateFactoryStrayTracker {
             ?.stack ?: return
         val nameText = (if (clickedStack.hasDisplayName()) clickedStack.displayName else clickedStack.itemName)
         if (!nameText.equals("§6§lGolden Rabbit §8- §aSide Dish")) return
+
+        HoppityAPI.fireSideDishMessage()
+        if (!isEnabled()) return
 
         claimedStraysSlots.add(index)
         incrementGoldenType("sidedish")
