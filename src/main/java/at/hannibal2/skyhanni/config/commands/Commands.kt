@@ -30,6 +30,7 @@ import at.hannibal2.skyhanni.features.event.diana.InquisitorWaypointShare
 import at.hannibal2.skyhanni.features.event.diana.MythologicalCreatureTracker
 import at.hannibal2.skyhanni.features.event.hoppity.HoppityCollectionStats
 import at.hannibal2.skyhanni.features.event.hoppity.HoppityEggLocations
+import at.hannibal2.skyhanni.features.event.hoppity.HoppityEventSummary
 import at.hannibal2.skyhanni.features.event.jerry.frozentreasure.FrozenTreasureTracker
 import at.hannibal2.skyhanni.features.fishing.tracker.FishingProfitTracker
 import at.hannibal2.skyhanni.features.fishing.tracker.SeaCreatureTracker
@@ -51,6 +52,7 @@ import at.hannibal2.skyhanni.features.garden.fortuneguide.FFGuideGUI
 import at.hannibal2.skyhanni.features.garden.pests.PestFinder
 import at.hannibal2.skyhanni.features.garden.pests.PestProfitTracker
 import at.hannibal2.skyhanni.features.garden.visitor.GardenVisitorDropStatistics
+import at.hannibal2.skyhanni.features.inventory.caketracker.CakeTracker
 import at.hannibal2.skyhanni.features.inventory.chocolatefactory.ChocolateFactoryStrayTracker
 import at.hannibal2.skyhanni.features.mining.KingTalismanHelper
 import at.hannibal2.skyhanni.features.mining.MineshaftPityDisplay
@@ -274,6 +276,10 @@ object Commands {
             "Resets the Sea Creature Tracker",
         ) { SeaCreatureTracker.resetCommand() }
         registerCommand(
+            "shresetcaketracker",
+            "Resets the New Year Cake Tracker",
+        ) { CakeTracker.resetCommand() }
+        registerCommand(
             "shresetstrayrabbittracker",
             "Resets the Stray Rabbit Tracker",
         ) { ChocolateFactoryStrayTracker.resetCommand() }
@@ -337,6 +343,10 @@ object Commands {
             "shtpinfested",
             "Teleports you to the nearest infested plot",
         ) { PestFinder.teleportNearestInfestedPlot() }
+        registerCommand(
+            "shhoppitystats",
+            "Look up stats for a Hoppity's Event (by SkyBlock year).\nRun standalone for a list of years that have stats."
+        ) { HoppityEventSummary.sendStatsMessage(it) }
     }
 
     private fun usersBugFix() {
