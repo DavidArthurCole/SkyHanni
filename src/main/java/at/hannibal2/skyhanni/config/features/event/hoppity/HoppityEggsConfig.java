@@ -19,6 +19,10 @@ public class HoppityEggsConfig {
     public HoppityCallWarningConfig hoppityCallWarning = new HoppityCallWarningConfig();
 
     @Expose
+    @ConfigOption(name = "Event Summary", desc = "")
+    @Accordion
+    public HoppityEventSummaryConfig eventSummary = new HoppityEventSummaryConfig();
+
     @ConfigOption(name = "Hoppity Waypoints", desc = "Toggle guess waypoints for Hoppity's Hunt.")
     @ConfigEditorBoolean
     @FeatureToggle
