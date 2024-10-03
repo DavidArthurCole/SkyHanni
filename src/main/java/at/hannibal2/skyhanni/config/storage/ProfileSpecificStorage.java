@@ -199,6 +199,9 @@ public class ProfileSpecificStorage {
 
         @Expose
         public Map<CarnivalGoal, Boolean> goals = new HashMap<>();
+
+        @Expose
+        public Map<String, Map<String, Integer>> carnivalShopProgress = new HashMap<>();
     }
 
     @Expose
