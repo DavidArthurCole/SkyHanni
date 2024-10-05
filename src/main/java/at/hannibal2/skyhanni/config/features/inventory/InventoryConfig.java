@@ -9,6 +9,7 @@ import at.hannibal2.skyhanni.config.features.inventory.helper.HelperConfig;
 import at.hannibal2.skyhanni.config.features.itemability.ItemAbilityConfig;
 import at.hannibal2.skyhanni.config.features.misc.EstimatedItemValueConfig;
 import at.hannibal2.skyhanni.config.features.misc.PocketSackInASackConfig;
+import at.hannibal2.skyhanni.features.inventory.caketracker.CakeTrackerConfig;
 import com.google.gson.annotations.Expose;
 import io.github.notenoughupdates.moulconfig.annotations.Accordion;
 import io.github.notenoughupdates.moulconfig.annotations.Category;
@@ -129,6 +130,11 @@ public class InventoryConfig {
     @Accordion
     public PageScrollingConfig pageScrolling = new PageScrollingConfig();
 
+    @Expose
+    @ConfigOption(name = "Cake Tracker", desc = "")
+    @Accordion
+    public CakeTrackerConfig cakeTracker = new CakeTrackerConfig();
+  
     @Expose
     @ConfigOption(name = "Magical Power Display", desc = "")
     @Accordion
@@ -300,8 +306,15 @@ public class InventoryConfig {
     public boolean hexAsColorInLore = true;
 
     @Expose
+    @ConfigOption(name = "Essence Shop Helper", desc = "Show extra information about remaining upgrades in essence shops.")
+    @ConfigEditorBoolean
+    @FeatureToggle
+    public boolean essenceShopHelper = true;
+  
+    @Expose
     @ConfigOption(name = "Highlight Active Beacon Effect", desc = "Highlights the currently selected beacon effect in the beacon inventory.")
     @ConfigEditorBoolean
     @FeatureToggle
     public boolean highlightActiveBeaconEffect = true;
+
 }
