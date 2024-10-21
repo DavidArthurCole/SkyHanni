@@ -1,4 +1,4 @@
-name: Run Detekt and Comment on PR
+name: "Run Detekt and Comment on PR"
 
 on:
     pull_request_target:
