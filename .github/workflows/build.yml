@@ -52,6 +52,7 @@ jobs:
                     chmod +x .github/scripts/process_detekt_sarif.sh
                     ./.github/scripts/process_detekt_sarif.sh versions/1.8.9/build/reports/detekt/main.sarif
             -   name: Upload SARIF file as artifact
+                if: always()
                 uses: actions/upload-artifact@v4
                 with:
                     name: detekt-sarif-report
