@@ -53,6 +53,33 @@ jobs:
                 run: |
                     chmod +x .github/scripts/process_detekt_sarif.sh
                     ./.github/scripts/process_detekt_sarif.sh versions/1.8.9/build/reports/detekt/main.sarif
+    detekt_comment:
+        name: Comment detekt failures on PR
+        runs-on: ubuntu-latest
+        needs: detekt
+        if: ${{ github.event_name == 'pull_request' && steps.detekt.outcome == 'failure' }}
+        steps:
+            -   name: Checkout code
+                uses: actions/checkout@v4
+            -   name: Process detekt SARIF and create comment
+                run: |
+                    chmod +x .github/scripts/process_detekt_sarif.sh
+                    ./.github/scripts/process_detekt_sarif.sh versions/1.8.9/build/reports/detekt/main.sarif > detekt_output.txt
+
+                    DETEKT_OUTPUT=$(cat detekt_output.txt)
+
+                    COMMENT="### One or more Detekt Failures were detekted: \n\n"
+                    while read -r line; do
+                        FILE_PATH=$(echo "$line" | cut -d' ' -f2)
+                        LINE_NUMBER=$(echo "$line" | grep -oP "#L\K\d+")
+                        COMMENT+="- [ ] [$FILE_PATH#L$LINE_NUMBER](${{ github.server_url }}/$GITHUB_REPOSITORY/blob/$GITHUB_SHA/$FILE_PATH#L$LINE_NUMBER): $line\n"
+                    done <<< "$DETEKT_OUTPUT"
+
+                    curl -s -X POST \
+                        -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+                        -H "Content-Type: application/json" \
+                        --data "{ \"body\": \"$COMMENT\" }" \
+                          ${{ github.event.pull_request.comments_url }}
     preprocess:
         runs-on: ubuntu-latest
         name: "Build multi version"
