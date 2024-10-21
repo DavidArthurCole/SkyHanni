@@ -65,21 +65,42 @@ jobs:
                 run: |
                     chmod +x .github/scripts/process_detekt_sarif.sh
                     ./.github/scripts/process_detekt_sarif.sh versions/1.8.9/build/reports/detekt/main.sarif > detekt_output.txt
-
+                    
                     DETEKT_OUTPUT=$(cat detekt_output.txt)
-
+                
                     COMMENT="### One or more Detekt Failures were detekted: \n\n"
-                    while read -r line; do
-                        FILE_PATH=$(echo "$line" | cut -d' ' -f2)
-                        LINE_NUMBER=$(echo "$line" | grep -oP "#L\K\d+")
-                        COMMENT+="- [ ] [$FILE_PATH#L$LINE_NUMBER](${{ github.server_url }}/$GITHUB_REPOSITORY/blob/$GITHUB_SHA/$FILE_PATH#L$LINE_NUMBER): $line\n"
-                    done <<< "$DETEKT_OUTPUT"
+                        while read -r line; do
+                      # Extract the full file path and line number using regex
+                        FILE_PATH=$(echo "$line" | grep -oP '(?<=file=)[^,]+')
+                        LINE_NUMBER=$(echo "$line" | grep -oP '(?<=line=)\d+')
+                      
+                      # Extract just the file name from the file path
+                        FILE_NAME=$(basename "$FILE_PATH")
+                      
+                      # Clean up the line using pure bash to remove everything between "::" and "::"
+                        CLEAN_MESSAGE="${line//::*/}" # Removes everything starting from "::"
+                    
+                    # Append the comment with the cleaned-up message
+                    COMMENT+="- [ ] [$FILE_NAME#L$LINE_NUMBER](https://github.com/${GITHUB_REPOSITORY}/blob/${GITHUB_SHA}/${FILE_PATH/#file:\/\/\/C:\/Users\/david\/source\/repos\/SkyHanni/}#L$LINE_NUMBER): $CLEAN_MESSAGE\n"
+                        done <<< "$DETEKT_OUTPUT"
+                    
+                    echo "$COMMENT" > detekt_comment.txt
+            -   name: Add comment to PR
+                if: failure()
+                uses: actions/github-script@v6
+                with:
+                    github-token: ${{ secrets.GITHUB_TOKEN }}
+                    script: |
+                        const fs = require('fs');
+                        const commentBody = fs.readFileSync('detekt_comment.txt', 'utf8');
+                        
+                        github.rest.issues.createComment({
+                          issue_number: context.issue.number,
+                          owner: context.repo.owner,
+                          repo: context.repo.repo,
+                          body: commentBody
+                        })
 
-                    curl -s -X POST \
-                        -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
-                        -H "Content-Type: application/json" \
-                        --data "{ \"body\": \"$COMMENT\" }" \
-                          ${{ github.event.pull_request.comments_url }}
     preprocess:
         runs-on: ubuntu-latest
         name: "Build multi version"
