@@ -39,20 +39,24 @@ jobs:
     detekt:
         name: Run detekt
         runs-on: ubuntu-latest
-
         steps:
             -   name: Checkout code
                 uses: actions/checkout@v4
             -   uses: ./.github/actions/setup-normal-workspace
-            # detektMain is a LOT slower than detekt, but it does type analysis
-            -   name: Run detekt main (w/typing analysis)
+            -   name: Run detekt main (w/ typing analysis)
                 run: |
-                    ./gradlew detektMain --stacktrace
+                  ./gradlew detektMain --stacktrace
             -   name: Annotate detekt failures
                 if: ${{ !cancelled() }}
                 run: |
                     chmod +x .github/scripts/process_detekt_sarif.sh
                     ./.github/scripts/process_detekt_sarif.sh versions/1.8.9/build/reports/detekt/main.sarif
+            -   name: Upload SARIF file as artifact
+                uses: actions/upload-artifact@v4
+                with:
+                    name: detekt-sarif-report
+                    path: versions/1.8.9/build/reports/detekt/main.sarif
+
     detekt_comment:
         name: Comment detekt failures on PR
         runs-on: ubuntu-latest
@@ -61,14 +65,19 @@ jobs:
         steps:
             -   name: Checkout code
                 uses: actions/checkout@v4
+            -   name: Download SARIF file
+                uses: actions/download-artifact@v4
+                with:
+                    name: detekt-sarif-report
+                    path: .
             -   name: Process detekt SARIF and create comment
                 shell: bash
                 run: |
                     set -e  # Exit on errors
                     set -x  # Print each command for debugging
-                    
-                    # Ensure the SARIF file exists
-                    if [ ! -f versions/1.8.9/build/reports/detekt/main.sarif ]; then
+                  
+                    # Ensure the SARIF file exists in the project root
+                    if [ ! -f main.sarif ]; then
                     echo "SARIF file not found!"
                     exit 1
                     fi
@@ -76,7 +85,7 @@ jobs:
                     chmod +x .github/scripts/process_detekt_sarif.sh
                     
                     # Process the SARIF file
-                    ./.github/scripts/process_detekt_sarif.sh versions/1.8.9/build/reports/detekt/main.sarif > detekt_output.txt
+                    ./.github/scripts/process_detekt_sarif.sh main.sarif > detekt_output.txt
                     
                     # Check if the detekt_output.txt file was created
                     if [ ! -s detekt_output.txt ]; then
@@ -124,7 +133,6 @@ jobs:
                     # Output the comment for debugging
                     cat detekt_comment.txt
             -   name: Add comment to PR
-                if: failure()
                 uses: actions/github-script@v6
                 with:
                     github-token: ${{ secrets.GITHUB_TOKEN }}
