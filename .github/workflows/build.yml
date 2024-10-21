@@ -62,29 +62,67 @@ jobs:
             -   name: Checkout code
                 uses: actions/checkout@v4
             -   name: Process detekt SARIF and create comment
+                shell: bash
                 run: |
+                    set -e  # Exit on errors
+                    set -x  # Print each command for debugging
+                    
+                    # Ensure the SARIF file exists
+                    if [ ! -f versions/1.8.9/build/reports/detekt/main.sarif ]; then
+                    echo "SARIF file not found!"
+                    exit 1
+                    fi
+                    
                     chmod +x .github/scripts/process_detekt_sarif.sh
+                    
+                    # Process the SARIF file
                     ./.github/scripts/process_detekt_sarif.sh versions/1.8.9/build/reports/detekt/main.sarif > detekt_output.txt
                     
+                    # Check if the detekt_output.txt file was created
+                    if [ ! -s detekt_output.txt ]; then
+                    echo "detekt_output.txt is empty or missing!"
+                    exit 1
+                    fi
+                    
                     DETEKT_OUTPUT=$(cat detekt_output.txt)
-                
-                    COMMENT="### One or more Detekt Failures were detekted: \n\n"
-                        while read -r line; do
+                    
+                    COMMENT="### One or more Detekt Failures were detected:\n\n"
+                    
+                    # Debugging: Check each line of the detekt output
+                    echo "Processing Detekt Output:"
+                    echo "$DETEKT_OUTPUT"
+                    
+                    while read -r line; do
+                      echo "Processing line: $line"
+                    
                       # Extract the full file path and line number using regex
-                        FILE_PATH=$(echo "$line" | grep -oP '(?<=file=)[^,]+')
-                        LINE_NUMBER=$(echo "$line" | grep -oP '(?<=line=)\d+')
-                      
+                      FILE_PATH=$(echo "$line" | grep -oP '(?<=file=)[^,]+')
+                      LINE_NUMBER=$(echo "$line" | grep -oP '(?<=line=)\d+')
+                    
+                      # Check if extraction worked
+                      if [ -z "$FILE_PATH" ] || [ -z "$LINE_NUMBER" ]; then
+                          echo "Failed to extract file path or line number from: $line"
+                          continue
+                      fi
+                    
+                      echo "File path: $FILE_PATH, Line number: $LINE_NUMBER"
+                    
                       # Extract just the file name from the file path
-                        FILE_NAME=$(basename "$FILE_PATH")
-                      
-                      # Clean up the line using pure bash to remove everything between "::" and "::"
-                        CLEAN_MESSAGE="${line//::*/}" # Removes everything starting from "::"
+                      FILE_NAME=$(basename "$FILE_PATH")
+                      echo "File name: $FILE_NAME"
                     
-                    # Append the comment with the cleaned-up message
-                    COMMENT+="- [ ] [$FILE_NAME#L$LINE_NUMBER](https://github.com/${GITHUB_REPOSITORY}/blob/${GITHUB_SHA}/${FILE_PATH/#file:\/\/\/C:\/Users\/david\/source\/repos\/SkyHanni/}#L$LINE_NUMBER): $CLEAN_MESSAGE\n"
-                        done <<< "$DETEKT_OUTPUT"
+                      # Clean up the line to remove everything starting from "::"
+                      CLEAN_MESSAGE="${line//::*/}"
+                      echo "Clean message: $CLEAN_MESSAGE"
                     
-                    echo "$COMMENT" > detekt_comment.txt
+                      # Append the comment with the cleaned-up message
+                      COMMENT+="- [ ] [$FILE_NAME#L$LINE_NUMBER](https://github.com/${{ github.repository }}/blob/${{ github.sha }}/${FILE_PATH/#file:\/\/\/C:\/Users\/david\/source\/repos\/SkyHanni/}#L$LINE_NUMBER): $CLEAN_MESSAGE\n"
+                    done <<< "$DETEKT_OUTPUT"
+                    
+                    echo -e "$COMMENT" > detekt_comment.txt
+                    
+                    # Output the comment for debugging
+                    cat detekt_comment.txt
             -   name: Add comment to PR
                 if: failure()
                 uses: actions/github-script@v6
