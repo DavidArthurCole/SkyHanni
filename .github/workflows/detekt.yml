@@ -94,7 +94,7 @@ jobs:
                     FILE_NAME=$(basename "$FILE_PATH")
                   
                     # Clean up the line to remove everything starting from "::"
-                    CLEAN_MESSAGE=$(echo "$line" | sed 's/::[^:]*:://g')
+                    CLEAN_MESSAGE=$(echo "$line" | sed 's/::.*:://g')
                   
                     # Append the comment with the cleaned-up message and correctly formatted link
                     COMMENT+="- [ ] [$FILE_NAME#L$LINE_NUMBER](https://github.com/${{ github.repository }}/blob/${{ github.sha }}/$FILE_PATH#L$LINE_NUMBER): $CLEAN_MESSAGE\n"
