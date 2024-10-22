@@ -33,6 +33,7 @@ import kotlin.time.Duration.Companion.seconds
 @SkyHanniModule
 object HoppityEggsManager {
 
+    val ignore = "colour"
     val config get() = SkyHanniMod.feature.event.hoppityEggs
 
     /**
