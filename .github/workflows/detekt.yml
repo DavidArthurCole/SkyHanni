@@ -79,29 +79,33 @@ jobs:
                   
                   while read -r line; do
                     echo "Processing line: $line"
-                  
+                    
                     # Extract the full file path and line number using regex
                     FILE_PATH=$(echo "$line" | grep -oP '(?<=file=)[^,]+')
                     LINE_NUMBER=$(echo "$line" | grep -oP '(?<=line=)\d+')
-                  
+                    
                     # Check if extraction worked
                     if [ -z "$FILE_PATH" ] || [ -z "$LINE_NUMBER" ]; then
-                        echo "Failed to extract file path or line number from: $line"
-                        continue
+                      echo "Failed to extract file path or line number from: $line"
+                      continue
                     fi
-                  
+                    
+                    echo "Original file path: $FILE_PATH, Line number: $LINE_NUMBER"
+                    
+                    # Remove everything before 'src/' in the file path (if it exists)
+                    CLEANED_FILE_PATH=$(echo "$FILE_PATH" | sed 's/.*\(src\/.*\)/\1/')
+                    echo "Cleaned file path: $CLEANED_FILE_PATH"
+                    
                     # Extract just the file name from the file path
-                    FILE_NAME=$(basename "$FILE_PATH")
-                  
-                    # Clean up the line to remove everything starting from "::"
+                    FILE_NAME=$(basename "$CLEANED_FILE_PATH")
+                    echo "File name: $FILE_NAME"
+                    
+                    # Clean up the line to remove everything between '::' and '::' (inclusive)
                     CLEAN_MESSAGE=$(echo "$line" | sed 's/::.*:://g')
-                  
-                    # Output the cleaned-up message for debugging
-                    echo "Line: $line"
-                    echo "Cleaned message: $CLEAN_MESSAGE"
-                  
-                    # Append the comment with the cleaned-up message and correctly formatted link
-                    COMMENT+="- [ ] [$FILE_NAME#L$LINE_NUMBER](https://github.com/${{ github.repository }}/blob/${{ github.sha }}/$FILE_PATH#L$LINE_NUMBER): $CLEAN_MESSAGE\n"
+                    echo "Clean message: $CLEAN_MESSAGE"
+                    
+                    # Append the comment with the cleaned-up message
+                    COMMENT+="- [ ] [$FILE_NAME#L$LINE_NUMBER](https://github.com/${{ github.repository }}/blob/${{ github.sha }}/$CLEANED_FILE_PATH#L$LINE_NUMBER): $CLEAN_MESSAGE\n"
                   done <<< "$DETEKT_OUTPUT"
                   
                   echo -e "$COMMENT" > detekt_comment.txt
