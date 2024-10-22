@@ -77,10 +77,6 @@ jobs:
                   
                   COMMENT="### One or more Detekt Failures were detected:\n\n"
                   
-                  # Debugging: Check each line of the detekt output
-                  echo "Processing Detekt Output:"
-                  echo "$DETEKT_OUTPUT"
-                  
                   while read -r line; do
                     echo "Processing line: $line"
                   
@@ -94,24 +90,17 @@ jobs:
                         continue
                     fi
                   
-                    echo "File path: $FILE_PATH, Line number: $LINE_NUMBER"
-                  
                     # Extract just the file name from the file path
                     FILE_NAME=$(basename "$FILE_PATH")
-                    echo "File name: $FILE_NAME"
                   
                     # Clean up the line to remove everything starting from "::"
                     CLEAN_MESSAGE="${line//::*/}"
-                    echo "Clean message: $CLEAN_MESSAGE"
                   
-                    # Append the comment with the cleaned-up message
-                    COMMENT+="- [ ] [$FILE_NAME#L$LINE_NUMBER](https://github.com/${{ github.repository }}/blob/${{ github.sha }}/${FILE_PATH/#file:\/\/\/C:\/Users\/david\/source\/repos\/SkyHanni/}#L$LINE_NUMBER): $CLEAN_MESSAGE\n"
+                    # Append the comment with the cleaned-up message and correctly formatted link
+                    COMMENT+="- [ ] [$FILE_NAME#L$LINE_NUMBER](https://github.com/${{ github.repository }}/blob/${{ github.sha }}/$FILE_PATH#L$LINE_NUMBER): $CLEAN_MESSAGE\n"
                   done <<< "$DETEKT_OUTPUT"
                   
                   echo -e "$COMMENT" > detekt_comment.txt
-                  
-                  # Output the comment for debugging
-                  cat detekt_comment.txt
             -   name: Add comment to PR
                 uses: actions/github-script@v6
                 with:
