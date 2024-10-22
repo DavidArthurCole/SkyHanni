@@ -26,6 +26,7 @@ import kotlin.time.Duration.Companion.seconds
 @SkyHanniModule
 object ProfileStorageData {
 
+    val ignore = "colour"
     var playerSpecific: PlayerSpecificStorage? = null
     var profileSpecific: ProfileSpecificStorage? = null
     var loaded = false
