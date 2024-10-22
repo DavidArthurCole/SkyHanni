@@ -33,6 +33,7 @@ object HoppityEventSummary {
     private val lineHeader = " ".repeat(4)
 
     val ignore = "colour"
+    val ignore2 = "armour"
     private var firstInCf = 0L
     private var inCfNow = false
 
