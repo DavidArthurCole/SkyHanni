@@ -711,6 +711,7 @@ object EstimatedItemValueCalculator {
     }
 
 
+
     // TODO repo
     private val hasAlwaysScavenger = listOf(
         "CRYPT_DREADLORD_SWORD".asInternalName(),
