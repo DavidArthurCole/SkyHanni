@@ -710,11 +710,6 @@ object EstimatedItemValueCalculator {
         return price
     }
 
-
-
-
-
-
     // TODO repo
     private val hasAlwaysScavenger = listOf(
         "CRYPT_DREADLORD_SWORD".asInternalName(),
