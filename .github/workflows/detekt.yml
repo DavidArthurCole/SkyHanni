@@ -96,6 +96,10 @@ jobs:
                     # Clean up the line to remove everything starting from "::"
                     CLEAN_MESSAGE=$(echo "$line" | sed 's/::.*:://g')
                   
+                    # Output the cleaned-up message for debugging
+                    echo "Line: $line"
+                    echo "Cleaned message: $CLEAN_MESSAGE"
+                  
                     # Append the comment with the cleaned-up message and correctly formatted link
                     COMMENT+="- [ ] [$FILE_NAME#L$LINE_NUMBER](https://github.com/${{ github.repository }}/blob/${{ github.sha }}/$FILE_PATH#L$LINE_NUMBER): $CLEAN_MESSAGE\n"
                   done <<< "$DETEKT_OUTPUT"
