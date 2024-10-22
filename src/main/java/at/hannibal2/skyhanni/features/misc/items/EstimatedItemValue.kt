@@ -40,6 +40,7 @@ import kotlin.math.roundToLong
 @SkyHanniModule
 object EstimatedItemValue {
 
+    val ignore = "colour"
     val config: EstimatedItemValueConfig get() = SkyHanniMod.feature.inventory.estimatedItemValues
     private var display = emptyList<Renderable>()
     private val cache = mutableMapOf<ItemStack, List<Renderable>>()
