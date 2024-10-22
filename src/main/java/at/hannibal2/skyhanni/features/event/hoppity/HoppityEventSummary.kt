@@ -32,6 +32,7 @@ object HoppityEventSummary {
     private val config get() = SkyHanniMod.feature.event.hoppityEggs
     private val lineHeader = " ".repeat(4)
 
+    val ignore = "colour"
     private var firstInCf = 0L
     private var inCfNow = false
 
