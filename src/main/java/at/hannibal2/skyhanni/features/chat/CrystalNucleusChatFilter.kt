@@ -26,6 +26,7 @@ object CrystalNucleusChatFilter {
     private var unclosedCrystalCollected = false
     private var crystalCount = 0
     private var crystalCollected = ""
+    private var lastKeeper = ""
 
     /**
      * REGEX-TEST: §3§l▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
@@ -82,6 +83,25 @@ object CrystalNucleusChatFilter {
     )
 
     /**
+     * REGEX-TEST: §6§lPICK IT UP!
+     */
+    private val scavengeSecondaryPattern by patternGroup.pattern(
+        "divan.scavenge.secondary",
+        "§6§lPICK IT UP!",
+    )
+
+    /**
+     * REGEX-TEST: §e[NPC] §6Keeper of Gold§f: §rExcellent! You have returned the §cScavenged Golden Hammer §rto its rightful place!
+     * REGEX-TEST: §e[NPC] §6Keeper of Diamond§f: §rExcellent! You have returned the §cScavenged Diamond Axe §rto its rightful place!
+     * REGEX-TEST: §e[NPC] §6Keeper of Emerald§f: §rExcellent! You have returned the §cScavenged Emerald Hammer §rto its rightful place!
+     * REGEX-TEST: §e[NPC] §6Keeper of Lapis§f: §rYou found all of the items! Behold... the §aJade Crystal§r!
+     */
+    private val genericKeeperMessage by patternGroup.pattern(
+        "npc.keeper",
+        "§e\\[NPC\\] §6Keeper of (?<keepertype>.*)§f: §r(?<message>.*)",
+    )
+
+    /**
      * REGEX-TEST: Thanks for bringing me the §9Synthetic Heart§r! Bring me 5 more components to fix the giant!
      * REGEX-TEST: Thanks for bringing me the §9Robotron Reflector§r! Bring me 5 more components to fix the giant!
      * REGEX-TEST: Thanks for bringing me the §9Superlite Motor§r! Bring me 4 more components to fix the giant!
@@ -105,6 +125,7 @@ object CrystalNucleusChatFilter {
             ?: blockCrystalPlaced(message)
             ?: blockRunCompleted(message)
             ?: blockNonToolScavenge(message)
+            ?: blockGoblinGuards(message)
             ?: blockNPC(message)
     }
 
@@ -161,8 +182,18 @@ object CrystalNucleusChatFilter {
         scavengeLootPattern.matchMatcher(message) {
             if (!group("loot").startsWith("§cScavenged")) return NucleusChatFilterRes("non_tool_scavenge")
         }
+        if (scavengeSecondaryPattern.matches(message)) return NucleusChatFilterRes("non_tool_scavenge")
 
         return null
+    }
+
+    private fun blockGoblinGuards(message: String): NucleusChatFilterRes? {
+        if (!shouldBlock(CrystalNucleusMessageTypes.NPC_GOBLIN_GUARDS)) return null
+
+        // §c[GUARD] Ooblak§r§f: §r§eTHEY'RE STEALING THE CRYSTAL! GET THEM!
+        if (!message.startsWith("§c[GUARD]")) return null
+
+        return NucleusChatFilterRes("npc_goblin_guard")
     }
 
     private fun blockNPC(message: String): NucleusChatFilterRes? {
@@ -171,7 +202,6 @@ object CrystalNucleusChatFilter {
         blockProfessorRobot(message)?.let { return it }
         blockKingYolkar(message)?.let { return it }
         blockKeepers(message)?.let { return it }
-        blockGoblinGuards(message)?.let { return it }
 
         return null
     }
@@ -204,7 +234,7 @@ object CrystalNucleusChatFilter {
         }
         // §e[NPC] §6King Yolkar§f: §rBring me back a §9Goblin Egg §rof any type and we can teach her a lesson!
         if (message.contains("Bring me back a §9Goblin Egg")) {
-            return NucleusChatFilterRes("", "§e[NPC] §6King Yolkar§f: §rBring me §a3 §9Goblin Egg §rof any type.")
+            return NucleusChatFilterRes("", "§e[NPC] §6King Yolkar§f: §rBring me a §9Goblin Egg §rof any type.")
         }
         // §e[NPC] §6King Yolkar§f: §rThis egg will help me stomach my pain.
         if (message.contains("This egg will help me stomach my pain.")) {
@@ -214,18 +244,16 @@ object CrystalNucleusChatFilter {
         return NucleusChatFilterRes("npc_king_yolkar")
     }
 
-    private fun blockGoblinGuards(message: String): NucleusChatFilterRes? {
-        if (!shouldBlock(CrystalNucleusMessageTypes.NPC_GOBLIN_GUARDS)) return null
-        if (!message.startsWith("§c[GUARD]")) return null
-        return NucleusChatFilterRes("npc_goblin_guard")
-    }
-
     private fun blockKeepers(message: String): NucleusChatFilterRes? {
         if (!shouldBlock(CrystalNucleusMessageTypes.NPC_DIVAN_KEEPERS)) return null
         if (!message.startsWith("§e[NPC] §6Keeper of ")) return null
 
+        genericKeeperMessage.matchMatcher(message) {
+            lastKeeper = group("keepertype")
+        }
+
         if (message.contains("You found all of the items!")) {
-            return NucleusChatFilterRes("", "§e[NPC] §6Keeper of §k§6Gold§f: §rAll tools submitted.")
+            return NucleusChatFilterRes("", "§e[NPC] §6Keeper of §6$lastKeeper§f: §rAll tools submitted.")
         }
 
         return NucleusChatFilterRes("npc_divan_keeper")
