@@ -24,7 +24,6 @@
     <ID>EnumWrapping:DungeonLividFinder.kt:DungeonLividFinder$LividColorHighlight</ID>
     <ID>EnumWrapping:EliteItemResourceJson.kt:EliteRequirementType</ID>
     <ID>EnumWrapping:SessionUptime.kt:NormalSession</ID>
-    <ID>FunctionNaming:LorenzVec.kt:@Deprecated("Use SkyHanniVector with Double arguments") fun LorenzVec</ID>
     <ID>FunctionNaming:LorenzVec.kt:@Deprecated("Use SkyHanniVector.ZERO", ReplaceWith("SkyHanniVector.ZERO", "at.hannibal2.skyhanni.utils.vector.SkyHanniVector")) fun LorenzVec</ID>
     <ID>ImplicitDefaultLocale:BloodTimer.kt:BloodTimer$"%.2f".format(it)</ID>
     <ID>ImplicitDefaultLocale:CakeTracker.kt:CakeTracker$"%.2f".format(data.ownedCakes.size * 100.0 / currentYear)</ID>

@@ -7,7 +7,7 @@ data class SkyHanniVector(
     override val z: Double,
 ) : VectorMetrics<SkyHanniVector>, LegacyVectorMath<SkyHanniVector>, LegacyVectorHelpers<SkyHanniVector> {
 
-    constructor(x: Int, y: Int, z: Int) : this(x.toDouble(), y.toDouble(), z.toDouble())
+    constructor(x: Number, y: Number, z: Number) : this(x.toDouble(), y.toDouble(), z.toDouble())
 
     override fun of(x: Double, y: Double, z: Double) = SkyHanniVector(x, y, z)
 

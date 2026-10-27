@@ -51,15 +51,13 @@ interface VectorArithmetic<V : VectorArithmetic<V>> : Vector3<V> {
 
     operator fun div(other: V) = of(x / other.x, y / other.y, z / other.z)
 
-    operator fun times(scalar: Double) = of(x * scalar, y * scalar, z * scalar)
+    operator fun times(scalar: Number) = scalar.toDouble().let { of(x * it, y * it, z * it) }
 
-    operator fun times(scalar: Int) = times(scalar.toDouble())
-
-    operator fun div(scalar: Double) = of(x / scalar, y / scalar, z / scalar)
+    operator fun div(scalar: Number) = scalar.toDouble().let { of(x / it, y / it, z / it) }
 
     operator fun unaryMinus() = of(-x, -y, -z)
 
-    fun add(x: Double = 0.0, y: Double = 0.0, z: Double = 0.0) = of(this.x + x, this.y + y, this.z + z)
+    fun add(x: Number = 0, y: Number = 0, z: Number = 0) = of(this.x + x.toDouble(), this.y + y.toDouble(), this.z + z.toDouble())
 
     fun up(offset: Number = 1) = of(x, y + offset.toDouble(), z)
 

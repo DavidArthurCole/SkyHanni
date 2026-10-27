@@ -14,16 +14,13 @@ import net.minecraft.world.phys.AABB
 import net.minecraft.world.phys.Vec3
 
 @Deprecated(
-    "Use SkyHanniVector. The alias, the legacy interfaces and the NoLorenzVec detekt rule are removed after 2026-12.",
+    "Use SkyHanniVector",
     ReplaceWith("SkyHanniVector", "at.hannibal2.skyhanni.utils.vector.SkyHanniVector"),
 )
 typealias LorenzVec = SkyHanniVector
 
 @Deprecated("Use SkyHanniVector.ZERO", ReplaceWith("SkyHanniVector.ZERO", "at.hannibal2.skyhanni.utils.vector.SkyHanniVector"))
 fun LorenzVec() = SkyHanniVector.ZERO
-
-@Deprecated("Use SkyHanniVector with Double arguments")
-fun LorenzVec(x: Float, y: Float, z: Float) = SkyHanniVector(x.toDouble(), y.toDouble(), z.toDouble())
 
 @Deprecated("Use VectorBlocks.AXIS_DIRECTIONS")
 val lorenzVecDirections = setOf(

@@ -18,9 +18,6 @@ import net.minecraft.world.phys.Vec3
 
 interface LegacyVectorMath<V : VectorMetrics<V>> : VectorMetrics<V> {
 
-    @Deprecated("Use add with Double arguments", ReplaceWith("add(x.toDouble(), y.toDouble(), z.toDouble())"))
-    fun add(x: Int = 0, y: Int = 0, z: Int = 0) = add(x.toDouble(), y.toDouble(), z.toDouble())
-
     @Deprecated("Use distance", ReplaceWith("distance(of(x, y, z))"))
     fun distance(x: Double, y: Double, z: Double) = distance(of(x, y, z))
 
