@@ -13,7 +13,9 @@ object VectorBlocks {
         SkyHanniBlockVector(0, 0, -1),
     )
 
-    fun SkyHanniVector.floorToBlock() = SkyHanniBlockVector(floor(x).toInt(), floor(y).toInt(), floor(z).toInt())
+    fun Vector3<*>.floorToBlock() = SkyHanniBlockVector(floor(x).toInt(), floor(y).toInt(), floor(z).toInt())
+
+    fun <V : VectorArithmetic<V>> VectorArithmetic<V>.blockCenter() = floor().addHalf()
 
     fun SkyHanniBlockVector.neighbors() = AXIS_DIRECTIONS.map { this + it }
 }

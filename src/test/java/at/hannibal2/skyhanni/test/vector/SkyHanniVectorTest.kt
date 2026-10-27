@@ -1,9 +1,13 @@
 package at.hannibal2.skyhanni.test.vector
 
 import at.hannibal2.skyhanni.utils.vector.SkyHanniVector
+import at.hannibal2.skyhanni.utils.vector.VectorBlocks.blockCenter
 import at.hannibal2.skyhanni.utils.vector.VectorBlocks.floorToBlock
+import at.hannibal2.skyhanni.utils.vector.VectorFormat.asStoredString
 import at.hannibal2.skyhanni.utils.vector.VectorFormat.formatRounded
 import at.hannibal2.skyhanni.utils.vector.VectorFormat.parseStored
+import at.hannibal2.skyhanni.utils.vector.VectorFormat.toChatFormat
+import at.hannibal2.skyhanni.utils.vector.VectorFormat.toLocalFormat
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotEquals
 import org.junit.jupiter.api.Assertions.assertTrue

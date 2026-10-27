@@ -14,7 +14,7 @@ import net.minecraft.world.phys.AABB
 import net.minecraft.world.phys.Vec3
 
 @Deprecated(
-    "Use SkyHanniVector. The alias, the deprecated members and the NoLorenzVec detekt rule are removed after 2026-12.",
+    "Use SkyHanniVector. The alias, the legacy interfaces and the NoLorenzVec detekt rule are removed after 2026-12.",
     ReplaceWith("SkyHanniVector", "at.hannibal2.skyhanni.utils.vector.SkyHanniVector"),
 )
 typealias LorenzVec = SkyHanniVector

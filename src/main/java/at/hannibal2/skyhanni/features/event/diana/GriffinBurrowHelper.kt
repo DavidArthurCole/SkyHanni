@@ -629,7 +629,7 @@ object GriffinBurrowHelper {
         }
 
         EntityMovementData.addToTrack(MinecraftCompat.localPlayerOrThrow)
-        val location = LocationUtils.playerLocation().floor().down()
+        val location = LocationUtils.playerLocation().roundLocation()
         addGuess(GuessEntry(listOf(location), burrowType = type), "added test burrow from command")
         update()
     }

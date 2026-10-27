@@ -12,7 +12,11 @@ import org.joml.Vector3fc
 
 object VectorConversions {
 
-    fun SkyHanniVector.toVector3f() = Vector3f(x.toFloat(), y.toFloat(), z.toFloat())
+    fun Vector3<*>.toVec3() = Vec3(x, y, z)
+
+    fun Vector3<*>.toVector3f() = Vector3f(x.toFloat(), y.toFloat(), z.toFloat())
+
+    fun Vector3<*>.toBlockPos(): BlockPos = BlockPos.containing(x, y, z)
 
     fun SkyHanniBlockVector.toBlockPos(): BlockPos = BlockPos.of(asLong())
 

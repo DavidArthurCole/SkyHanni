@@ -5,22 +5,22 @@ import net.minecraft.world.phys.AABB
 
 object VectorBounds {
 
-    operator fun SkyHanniVector.get(axis: Direction.Axis): Double = axis.choose(x, y, z)
+    operator fun Vector3<*>.get(axis: Direction.Axis): Double = axis.choose(x, y, z)
 
-    fun SkyHanniVector.with(axis: Direction.Axis, value: Double) = when (axis) {
-        Direction.Axis.X -> copy(x = value)
-        Direction.Axis.Y -> copy(y = value)
-        Direction.Axis.Z -> copy(z = value)
+    fun <V : Vector3<V>> Vector3<V>.with(axis: Direction.Axis, value: Double) = when (axis) {
+        Direction.Axis.X -> of(value, y, z)
+        Direction.Axis.Y -> of(x, value, z)
+        Direction.Axis.Z -> of(x, y, value)
     }
 
-    fun SkyHanniVector.boxAround(radius: Double) = AABB(x - radius, y - radius, z - radius, x + radius, y + radius, z + radius)
+    fun Vector3<*>.boxAround(radius: Double) = AABB(x - radius, y - radius, z - radius, x + radius, y + radius, z + radius)
 
-    fun SkyHanniVector.boxTo(other: SkyHanniVector) = AABB(x, y, z, other.x, other.y, other.z)
+    fun Vector3<*>.boxTo(other: Vector3<*>) = AABB(x, y, z, other.x, other.y, other.z)
 
-    fun SkyHanniVector.boxFromOrigin(sizeX: Double, sizeY: Double, sizeZ: Double) =
+    fun Vector3<*>.boxFromOrigin(sizeX: Double, sizeY: Double, sizeZ: Double) =
         AABB(x, y, z, x + sizeX, y + sizeY, z + sizeZ)
 
-    fun SkyHanniVector.blockBox() = boxFromOrigin(1.0, 1.0, 1.0)
+    fun Vector3<*>.blockBox() = boxFromOrigin(1.0, 1.0, 1.0)
 
     fun SkyHanniBlockVector.box() = toVector().blockBox()
 
@@ -34,9 +34,9 @@ object VectorBounds {
 
     fun AABB.topCenter() = center().up((maxY - minY) / 2)
 
-    fun AABB.contains(vector: SkyHanniVector) = contains(vector.x, vector.y, vector.z)
+    fun AABB.contains(vector: Vector3<*>) = contains(vector.x, vector.y, vector.z)
 
-    fun AABB.inflate(vector: SkyHanniVector): AABB = inflate(vector.x, vector.y, vector.z)
+    fun AABB.inflate(vector: Vector3<*>): AABB = inflate(vector.x, vector.y, vector.z)
 
     fun AABB.cornersAtHeight(y: Double) = listOf(
         SkyHanniVector(minX, y, minZ),
@@ -52,11 +52,11 @@ object VectorBounds {
         return (ring(bottom) + ring(top) + bottom.zip(top)).toSet()
     }
 
-    fun SkyHanniVector.nearestPointOnSegment(start: SkyHanniVector, end: SkyHanniVector): SkyHanniVector {
+    fun <V : VectorMetrics<V>> VectorMetrics<V>.nearestPointOnSegment(start: V, end: V): V {
         val direction = end - start
         val lengthSquared = direction.lengthSquared()
         if (lengthSquared == 0.0) return start
-        val t = ((this - start) dot direction / lengthSquared).coerceIn(0.0, 1.0)
+        val t = ((self - start) dot direction / lengthSquared).coerceIn(0.0, 1.0)
         return start + direction * t
     }
 }
