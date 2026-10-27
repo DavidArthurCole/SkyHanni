@@ -97,7 +97,6 @@
     <ID>MultilineLoop:JsonUtils.kt:it.add(entry.key, entry.value.shDeepCopy())</ID>
     <ID>MultilineLoop:SkyblockStat.kt:SkyblockStat.Companion$for (entry in entries) { val matchResult = pattern(entry).matchMatcher(line) { groupOrNull("value")?.replace("[,%]".toRegex(), "")?.toDouble() } ?: continue entry.lastKnownValue = matchResult entry.lastSource = type entry.lastAssignment = SimpleTimeMark.now() break // Exit the inner loop once a match is found }</ID>
     <ID>MultilineLoop:TabWidget.kt:TabWidget.Companion$when { PLAYER_LIST.pattern.matches(header) -&gt; if (playerListFound) removeIndexes.add(index - removeIndexes.size) else playerListFound = true INFO.pattern.matches(header) -&gt; if (infoFound) removeIndexes.add(index - removeIndexes.size) else infoFound = true }</ID>
-    <ID>NoEmptyFile:VectorUtils.kt:.VectorUtils.kt</ID>
     <ID>NoLorenzVec:AbstractHighlightedBlock.kt:AbstractHighlightedBlock$LorenzVec</ID>
     <ID>NoLorenzVec:ArachneSpawnTimer.kt:ArachneSpawnTimer$LorenzVec</ID>
     <ID>NoLorenzVec:AreaMiniBossFeatures.kt:AreaMiniBossFeatures.AreaMiniBossType$LorenzVec</ID>

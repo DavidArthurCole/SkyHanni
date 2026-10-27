@@ -10,9 +10,6 @@ import com.mojang.brigadier.StringReader
 import com.mojang.brigadier.arguments.ArgumentType
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType
 
-@Deprecated("Use VectorArgumentType", ReplaceWith("VectorArgumentType"))
-typealias LorenzVecArgumentType = VectorArgumentType
-
 sealed class VectorArgumentType : ArgumentType<SkyHanniVector> {
 
     protected abstract fun toVec(x: kotlin.Double, y: kotlin.Double, z: kotlin.Double): SkyHanniVector
