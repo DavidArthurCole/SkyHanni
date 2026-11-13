@@ -40,7 +40,7 @@ data class EliteGemstoneSlotCost(
     private val type: String,
     val coins: Int? = null,
     @SerialName("item_id") val itemId: NeuInternalName? = null,
-    @SerialName("amount") val amount: Int? = null,
+    val amount: Int? = null,
 ) {
     val costType: SlotCostType by lazy { SlotCostType.valueOf(type.uppercase()) }
 }

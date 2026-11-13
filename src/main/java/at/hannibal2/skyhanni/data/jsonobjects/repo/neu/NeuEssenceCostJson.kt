@@ -34,7 +34,7 @@ data class NeuEssenceCostJson(
 
 @Serializable
 data class NeuCatacombsRequirements(
-    @SerialName("type") val type: String,
+    val type: String,
     @SerialName("dungeon_type") val dungeonType: String?,
-    @SerialName("level") val level: Int,
+    val level: Int,
 )

@@ -13,5 +13,5 @@ data class SkyblockItemData(
     val id: String?,
     @SerialName("npc_sell_price") val npcPrice: Double?,
     @SerialName("motes_sell_price") val motesPrice: Double?,
-    @SerialName("stats") val stats: Map<String, Int>?,
+    val stats: Map<String, Int>?,
 )

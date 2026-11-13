@@ -23,8 +23,6 @@ import at.hannibal2.skyhanni.utils.SimpleTimeMark
 import at.hannibal2.skyhanni.utils.SimpleTimeMark.Companion.asTimeMark
 import at.hannibal2.skyhanni.utils.Stopwatch
 import at.hannibal2.skyhanni.utils.StringUtils
-import at.hannibal2.skyhanni.utils.json.JsonTreeBridge.toGson
-import at.hannibal2.skyhanni.utils.json.JsonTreeBridge.toKotlinx
 import at.hannibal2.skyhanni.utils.system.MCVersion
 import at.hannibal2.skyhanni.utils.system.ModVersion
 import at.hannibal2.skyhanni.utils.tracker.SkyHanniTracker
@@ -132,13 +130,7 @@ object ComponentSerializer : GsonAdapterSerializer<Component>(
         override fun read(reader: JsonReader): Component =
             ComponentSerialization.CODEC.decode(JsonOps.INSTANCE, JsonParser.parseReader(reader)).getOrThrow().first
     },
-) {
-    override fun toTree(value: Component): JsonElement =
-        ComponentSerialization.CODEC.encodeStart(JsonOps.INSTANCE, value).getOrThrow().toKotlinx()
-
-    override fun fromTree(element: JsonElement): Component =
-        ComponentSerialization.CODEC.decode(JsonOps.INSTANCE, element.toGson()).getOrThrow().first
-}
+)
 
 object ChromaColourSerializer : GsonAdapterSerializer<ChromaColour>(
     "ChromaColor",

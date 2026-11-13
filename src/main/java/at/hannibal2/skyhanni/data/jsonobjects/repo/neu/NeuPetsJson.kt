@@ -17,7 +17,7 @@ data class NeuPetsJson(
 
 @Serializable
 data class NeuPetData(
-    @SerialName("type") val type: Int? = null,
+    val type: Int? = null,
     @SerialName("pet_levels") val petLevels: List<Int>? = null,
     @SerialName("max_level") val maxLevel: Int? = null,
     @SerialName("rarity_offset") val rarityOffset: Map<LorenzRarity, Int>? = null,
