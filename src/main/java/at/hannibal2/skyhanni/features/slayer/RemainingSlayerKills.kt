@@ -34,10 +34,10 @@ import at.hannibal2.skyhanni.utils.SkyBlockUtils
 import at.hannibal2.skyhanni.utils.renderables.Renderable
 import at.hannibal2.skyhanni.utils.renderables.primitives.StringRenderable
 import at.hannibal2.skyhanni.utils.repopatterns.RepoPattern
-import com.google.gson.annotations.Expose
-import com.google.gson.annotations.SerializedName
 import kotlin.math.ceil
 import kotlin.time.Duration.Companion.minutes
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
 @SkyHanniModule
 object RemainingSlayerKills {
@@ -70,43 +70,42 @@ object RemainingSlayerKills {
         "\\+\\d+ Kill Combo \\+(?<wisdom>\\d+)☯ Combat Wisdom",
     )
 
+    @Serializable
     data class SlayerData(
-        @Expose @SerializedName("normal_mobs")
+        @SerialName("normal_mobs")
         val normalMobs: Map<SlayerType, Map<String, List<Mob>>>,
 
-        @Expose @SerializedName("mini_bosses")
+        @SerialName("mini_bosses")
         val miniBosses: Map<SlayerType, Map<String, List<Mob>>>,
 
-        @Expose
         val weapons: Map<SlayerType, Map<NeuInternalName, Int>>,
 
-        @Expose
         val equipments: Map<SlayerType, Map<NeuInternalName, Int>>,
 
-        @Expose
         val pets: Map<SlayerType, Map<String, SlayerSpecificPetData>>,
 
-        @Expose
         val champion: List<Double>,
 
-        @Expose @SerializedName("habanero_wisdom_per_level") val habaneroMultiplier: Double,
+        @SerialName("habanero_wisdom_per_level") val habaneroMultiplier: Double,
 
-        @Expose @SerializedName("multiplicative_mayor_perks") val multiplicativeMayors: Map<String, Double>,
+        @SerialName("multiplicative_mayor_perks") val multiplicativeMayors: Map<String, Double>,
 
-        @Expose @SerializedName("arbitrary_multiplier") val arbitraryMultiplier: Double,
+        @SerialName("arbitrary_multiplier") val arbitraryMultiplier: Double,
     )
 
+    @Serializable
     data class SlayerSpecificPetData(
         // These are only the first halves of a pet's Internal Name, this is the name used within PetData/PetUtils for these.
-        @Expose @SerializedName("proper_pet_names") val properPetNames: List<String>? = null,
-        @Expose @SerializedName("scaling") val perLevelMultiplier: List<Float>,
+        @SerialName("proper_pet_names") val properPetNames: List<String>? = null,
+        @SerialName("scaling") val perLevelMultiplier: List<Float> = emptyList(),
     )
 
+    @Serializable
     data class Mob(
-        @Expose val name: String,
-        @Expose val level: Int,
-        @Expose @SerializedName("max_health") val maxHealth: Int,
-        @Expose val xp: Double,
+        val name: String,
+        val level: Int,
+        @SerialName("max_health") val maxHealth: Int,
+        val xp: Double,
     )
 
     private var data: SlayerData? = null

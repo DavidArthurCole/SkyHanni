@@ -4,6 +4,7 @@ import at.hannibal2.skyhanni.utils.GraphUtils
 import at.hannibal2.skyhanni.utils.LocationUtils.distanceToPlayer
 import at.hannibal2.skyhanni.utils.LorenzVec
 import at.hannibal2.skyhanni.utils.NumberUtil.roundTo
+import at.hannibal2.skyhanni.utils.json.GraphSerializer
 import at.hannibal2.skyhanni.utils.json.fromJson
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
@@ -15,8 +16,10 @@ import com.google.gson.stream.JsonToken
 import com.google.gson.stream.JsonWriter
 import java.util.Collection
 import java.util.function.IntFunction
+import kotlinx.serialization.Serializable
 
 // TODO: This class should be disambiguated into a NodePath and a Graph class
+@Serializable(with = GraphSerializer::class)
 @JvmInline
 @Suppress("TooManyFunctions")
 value class Graph(

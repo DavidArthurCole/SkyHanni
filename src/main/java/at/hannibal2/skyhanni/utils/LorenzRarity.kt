@@ -3,10 +3,13 @@ package at.hannibal2.skyhanni.utils
 import at.hannibal2.skyhanni.test.command.ErrorManager
 import at.hannibal2.skyhanni.utils.StringUtils.firstLetterUppercase
 import at.hannibal2.skyhanni.utils.chat.TextHelper
+import at.hannibal2.skyhanni.utils.json.LorenzRaritySerializer
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.Style
 import java.util.Optional
+import kotlinx.serialization.Serializable
 
+@Serializable(with = LorenzRaritySerializer::class)
 enum class LorenzRarity(val color: LorenzColor) {
 
     COMMON(WHITE),

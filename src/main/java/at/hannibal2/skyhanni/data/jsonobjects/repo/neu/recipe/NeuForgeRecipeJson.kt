@@ -1,28 +1,29 @@
 package at.hannibal2.skyhanni.data.jsonobjects.repo.neu.recipe
 
 import at.hannibal2.skyhanni.data.jsonobjects.repo.neu.NeuItemJson
-import at.hannibal2.skyhanni.utils.KSerializable
 import at.hannibal2.skyhanni.utils.NeuInternalName
 import at.hannibal2.skyhanni.utils.PrimitiveIngredient
-import com.google.gson.annotations.Expose
-import com.google.gson.annotations.SerializedName
+import at.hannibal2.skyhanni.utils.json.WholeNumberSerializer
 import kotlin.time.Duration.Companion.seconds
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
-@KSerializable
+@Serializable
 data class NeuForgeRecipeJson(
-    @Expose override val type: NeuRecipeType = NeuRecipeType.FORGE,
-    @Expose val inputs: List<NeuRecipeComponent>,
-    @Expose val count: Int,
-    @Expose val overrideOutputId: NeuInternalName? = null,
-    @Expose @SerializedName("duration") private val durationSeconds: Int,
+    override val type: NeuRecipeType = NeuRecipeType.FORGE,
+    val inputs: List<NeuRecipeComponent>,
+    @Serializable(with = WholeNumberSerializer::class) val count: Int,
+    val overrideOutputId: NeuInternalName? = null,
+    @SerialName("duration") private val durationSeconds: Int,
 ) : NeuAbstractRecipe() {
     val duration by lazy { durationSeconds.seconds }
 
     override fun getPrimitiveInputs(itemJson: NeuItemJson): List<PrimitiveIngredient> =
         inputs.mapNotNull { it.toPrimitiveIngredientOrNull() }
 
-    override val outputOverride: NeuOverrideProvider = NeuOverrideProvider(
-        overrideItem = overrideOutputId,
-        overrideCount = count,
-    )
+    override val outputOverride: NeuOverrideProvider
+        get() = NeuOverrideProvider(
+            overrideItem = overrideOutputId,
+            overrideCount = count,
+        )
 }

@@ -1,21 +1,23 @@
 package at.hannibal2.skyhanni.data.jsonobjects.elitedev
 
 import at.hannibal2.skyhanni.utils.NeuInternalName
-import com.google.gson.annotations.Expose
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class EliteBazaarResponse(
-    @Expose val products: Map<NeuInternalName, EliteBazaarProduct>,
+    val products: Map<NeuInternalName, EliteBazaarProduct>,
 )
 
+@Serializable
 data class EliteBazaarProduct(
-    @Expose val name: String? = null,
-    @Expose val npc: Double? = null,
-    @Expose val sell: Double,
-    @Expose val buy: Double,
-    @Expose val sellOrder: Double,
-    @Expose val buyOrder: Double,
-    @Expose val averageSell: Double,
-    @Expose val averageBuy: Double,
-    @Expose val averageSellOrder: Double,
-    @Expose val averageBuyOrder: Double,
+    val name: String? = null,
+    val npc: Double? = null,
+    val sell: Double,
+    val buy: Double,
+    val sellOrder: Double,
+    val buyOrder: Double,
+    val averageSell: Double,
+    val averageBuy: Double,
+    val averageSellOrder: Double,
+    val averageBuyOrder: Double,
 )

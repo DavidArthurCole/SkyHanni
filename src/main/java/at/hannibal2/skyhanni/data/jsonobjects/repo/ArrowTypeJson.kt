@@ -1,11 +1,13 @@
 package at.hannibal2.skyhanni.data.jsonobjects.repo
 
-import com.google.gson.annotations.Expose
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class ArrowTypeJson(
-    @Expose val arrows: Map<String, ArrowAttributes>,
+    val arrows: Map<String, ArrowAttributes>,
 )
 
+@Serializable
 data class ArrowAttributes(
-    @Expose val arrow: String,
+    val arrow: String,
 )

@@ -26,8 +26,10 @@ import at.hannibal2.skyhanni.utils.RegexUtils.matchMatcher
 import at.hannibal2.skyhanni.utils.StringUtils.firstLetterUppercase
 import at.hannibal2.skyhanni.utils.StringUtils.removeColor
 import at.hannibal2.skyhanni.utils.collection.TimeLimitedCache
-import com.google.gson.JsonObject
 import kotlin.time.Duration.Companion.minutes
+import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.JsonPrimitive
+import kotlinx.serialization.json.intOrNull
 
 @SkyHanniModule
 object PetUtils {
@@ -84,7 +86,7 @@ object PetUtils {
     }
 
     fun getVariantIndexOrNull(extraData: JsonObject): Int? = petSkinNbtNames.firstNotNullOfOrNull {
-        extraData.get(it)?.asInt
+        (extraData[it] as? JsonPrimitive)?.intOrNull
     }
 
     fun resolvePetItemOrNull(itemName: String): NeuInternalName? {

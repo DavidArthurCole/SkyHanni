@@ -1,8 +1,9 @@
 package at.hannibal2.skyhanni.data.jsonobjects.repo
 
-import com.google.gson.annotations.Expose
-import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class CarryTrackerJson(
-    @Expose @SerializedName("slayer_names") val slayerNames: Map<String, List<String>>,
+    @SerialName("slayer_names") val slayerNames: Map<String, List<String>>,
 )

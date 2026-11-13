@@ -1,9 +1,10 @@
 package at.hannibal2.skyhanni.data.jsonobjects.repo
 
-import com.google.gson.annotations.Expose
-import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class BazaarJson(
-    @Expose @SerializedName("daily_limit") val dailyLimit: Double,
-    @Expose @SerializedName("cap_orders_at_integer_limit") val capOrdersAtIntLimit: Boolean,
+    @SerialName("daily_limit") val dailyLimit: Double,
+    @SerialName("cap_orders_at_integer_limit") val capOrdersAtIntLimit: Boolean,
 )

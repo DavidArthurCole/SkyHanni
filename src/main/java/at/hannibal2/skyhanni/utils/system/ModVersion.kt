@@ -1,7 +1,10 @@
 package at.hannibal2.skyhanni.utils.system
 
 import at.hannibal2.skyhanni.utils.VersionConstants
+import at.hannibal2.skyhanni.utils.json.ModVersionSerializer
+import kotlinx.serialization.Serializable
 
+@Serializable(with = ModVersionSerializer::class)
 data class ModVersion(val stable: Int, val beta: Int, val bugfix: Int) : Comparable<ModVersion> {
 
     val isBeta get() = beta != 0

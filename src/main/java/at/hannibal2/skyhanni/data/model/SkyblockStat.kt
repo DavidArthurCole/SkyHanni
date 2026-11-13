@@ -18,18 +18,22 @@ import at.hannibal2.skyhanni.utils.RegexUtils.matchMatcher
 import at.hannibal2.skyhanni.utils.SimpleTimeMark
 import at.hannibal2.skyhanni.utils.StringUtils.allLettersFirstUppercase
 import at.hannibal2.skyhanni.utils.UtilsPatterns
+import at.hannibal2.skyhanni.utils.json.SkyblockStatListSerializer
+import at.hannibal2.skyhanni.utils.json.SkyblockStatSerializer
 import at.hannibal2.skyhanni.utils.repopatterns.RepoPattern
 import net.minecraft.client.Minecraft
 import org.intellij.lang.annotations.Language
 import org.jetbrains.annotations.VisibleForTesting
 import java.util.regex.Pattern
 import kotlin.math.roundToInt
+import kotlinx.serialization.Serializable
 
 @Language("RegExp")
 private const val VALUE_PATTERN = "(?<value>[\\d,.]+)(?: .*)?"
 
 private val patternGroup = RepoPattern.group("stats")
 
+@Serializable(with = SkyblockStatSerializer::class)
 enum class SkyblockStat(
     val color: LorenzColor,
     val hypixelIcon: Char,
@@ -289,6 +293,7 @@ enum class SkyblockStat(
     }
 }
 
+@Serializable(with = SkyblockStatListSerializer::class)
 class SkyblockStatList : LinkedHashMap<SkyblockStat, Double>(), Map<SkyblockStat, Double> {
 
     operator fun minus(other: SkyblockStatList): SkyblockStatList {

@@ -2,47 +2,51 @@ package at.hannibal2.skyhanni.data.jsonobjects.repo
 
 import at.hannibal2.skyhanni.data.IslandType
 import at.hannibal2.skyhanni.utils.LorenzVec
-import com.google.gson.annotations.Expose
-import com.google.gson.annotations.SerializedName
+import at.hannibal2.skyhanni.utils.json.TreeSetSerializer
 import java.util.TreeSet
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.JsonNames
 
+@Serializable
 data class HoppityEggLocationsJson(
-    @Expose @SerializedName(value = "rabbit_slots", alternate = ["rabbitSlots"]) val rabbitSlots: Map<Int, Int>,
-    @Expose @SerializedName(value = "other_upgrade_slots", alternate = ["otherUpgradeSlots"]) val otherUpgradeSlots: Set<Int>,
-    @Expose @SerializedName(value = "no_pickblock_slots", alternate = ["noPickblockSlots"]) val noPickblockSlots: Set<Int>,
-    @Expose @SerializedName(value = "destructive_slots", alternate = ["destructiveSlots"]) val destructiveSlots: Set<Int>,
-    @Expose @SerializedName(value = "barn_index", alternate = ["barnIndex"]) val barnIndex: Int,
-    @Expose @SerializedName(value = "info_index", alternate = ["infoIndex"]) val infoIndex: Int,
-    @Expose @SerializedName(value = "production_info_index", alternate = ["productionInfoIndex"]) val productionInfoIndex: Int,
-    @Expose @SerializedName(value = "prestige_index", alternate = ["prestigeIndex"]) val prestigeIndex: Int,
-    @Expose @SerializedName(value = "milestone_index", alternate = ["milestoneIndex"]) val milestoneIndex: Int,
-    @Expose @SerializedName(value = "leaderboard_index", alternate = ["leaderboardIndex"]) val leaderboardIndex: Int,
-    @Expose @SerializedName(value = "hand_cookie_index", alternate = ["handCookieIndex"]) val handCookieIndex: Int,
-    @Expose @SerializedName(value = "time_tower_index", alternate = ["timeTowerIndex"]) val timeTowerIndex: Int,
-    @Expose @SerializedName(value = "shrine_index", alternate = ["shrineIndex"]) val shrineIndex: Int,
-    @Expose @SerializedName(value = "coach_rabbit_index", alternate = ["coachRabbitIndex"]) val coachRabbitIndex: Int,
-    @Expose @SerializedName(value = "rabbit_hitman_index", alternate = ["rabbitHitmanIndex"]) val rabbitHitmanIndex: Int,
-    @Expose @SerializedName(value = "max_rabbits", alternate = ["maxRabbits"]) val maxRabbits: Int,
-    @Expose @SerializedName(value = "max_prestige", alternate = ["maxPrestige"]) val maxPrestige: Int,
-    @Expose @SerializedName("cf_shortcut_index") val cfShortcutIndex: Int,
-    @Expose @SerializedName(value = "chocolate_milestones", alternate = ["chocolateMilestones"]) val chocolateMilestones: TreeSet<Long>,
-    @Expose @SerializedName("hitman_costs") val hitmanCosts: TreeSet<Long>,
-    @Expose
-    @SerializedName(value = "chocolate_shop_milestones", alternate = ["chocolateShopMilestones"])
+    @SerialName("rabbit_slots") @JsonNames("rabbitSlots") val rabbitSlots: Map<Int, Int>,
+    @SerialName("other_upgrade_slots") @JsonNames("otherUpgradeSlots") val otherUpgradeSlots: Set<Int>,
+    @SerialName("no_pickblock_slots") @JsonNames("noPickblockSlots") val noPickblockSlots: Set<Int>,
+    @SerialName("destructive_slots") @JsonNames("destructiveSlots") val destructiveSlots: Set<Int>,
+    @SerialName("barn_index") @JsonNames("barnIndex") val barnIndex: Int,
+    @SerialName("info_index") @JsonNames("infoIndex") val infoIndex: Int,
+    @SerialName("production_info_index") @JsonNames("productionInfoIndex") val productionInfoIndex: Int,
+    @SerialName("prestige_index") @JsonNames("prestigeIndex") val prestigeIndex: Int,
+    @SerialName("milestone_index") @JsonNames("milestoneIndex") val milestoneIndex: Int,
+    @SerialName("leaderboard_index") @JsonNames("leaderboardIndex") val leaderboardIndex: Int,
+    @SerialName("hand_cookie_index") @JsonNames("handCookieIndex") val handCookieIndex: Int,
+    @SerialName("time_tower_index") @JsonNames("timeTowerIndex") val timeTowerIndex: Int,
+    @SerialName("shrine_index") @JsonNames("shrineIndex") val shrineIndex: Int,
+    @SerialName("coach_rabbit_index") @JsonNames("coachRabbitIndex") val coachRabbitIndex: Int,
+    @SerialName("rabbit_hitman_index") @JsonNames("rabbitHitmanIndex") val rabbitHitmanIndex: Int,
+    @SerialName("max_rabbits") @JsonNames("maxRabbits") val maxRabbits: Int,
+    @SerialName("max_prestige") @JsonNames("maxPrestige") val maxPrestige: Int,
+    @SerialName("cf_shortcut_index") val cfShortcutIndex: Int,
+    @SerialName("chocolate_milestones") @JsonNames("chocolateMilestones")
+    @Serializable(with = TreeSetSerializer::class)
+    val chocolateMilestones: TreeSet<Long>,
+    @SerialName("hitman_costs")
+    @Serializable(with = TreeSetSerializer::class)
+    val hitmanCosts: TreeSet<Long>,
+    @SerialName("chocolate_shop_milestones") @JsonNames("chocolateShopMilestones")
     val chocolateShopMilestones: List<MilestoneJson>,
-    @Expose
-    @SerializedName(value = "chocolate_factory_milestones", alternate = ["chocolateFactoryMilestones"])
+    @SerialName("chocolate_factory_milestones") @JsonNames("chocolateFactoryMilestones")
     val chocolateFactoryMilestones: List<MilestoneJson>,
-    @Expose
-    @SerializedName(value = "resident_locations", alternate = ["residentLocations"])
+    @SerialName("resident_locations") @JsonNames("residentLocations")
     val residentLocations: Map<IslandType, List<String>>,
-    @Expose
-    @SerializedName(value = "api_egg_locations", alternate = ["apiEggLocations"])
+    @SerialName("api_egg_locations") @JsonNames("apiEggLocations")
     val apiEggLocations: Map<IslandType, Map<String, LorenzVec>>,
-    @Expose @SerializedName(value = "special_rabbits", alternate = ["specialRabbits"]) val specialRabbits: List<String>,
+    @SerialName("special_rabbits") @JsonNames("specialRabbits") val specialRabbits: List<String>,
 )
 
+@Serializable
 data class MilestoneJson(
-    @Expose val amount: Long,
-    @Expose val rabbit: String,
+    val amount: Long,
+    val rabbit: String,
 )

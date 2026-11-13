@@ -1,42 +1,47 @@
 package at.hannibal2.skyhanni.features.mining.eventtracker
 
 import at.hannibal2.skyhanni.data.IslandType
-import com.google.gson.annotations.Expose
-import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class MiningEventDataSend(
-    @Expose @SerializedName("server_type") val serverType: IslandType,
-    @Expose @SerializedName("server_id") val serverId: String,
-    @Expose val event: MiningEventType,
-    @Expose @SerializedName("time_left") val timeRemaining: Long,
-    @Expose @SerializedName("reporter_uuid") val uuid: String,
+    @SerialName("server_type") val serverType: IslandType,
+    @SerialName("server_id") val serverId: String,
+    val event: MiningEventType,
+    @SerialName("time_left") val timeRemaining: Long,
+    @SerialName("reporter_uuid") val uuid: String,
 )
 
+@Serializable
 data class MiningEventDataReceive(
-    @Expose val success: Boolean,
-    @Expose val data: MiningEventData?,
-    @Expose val cause: String?,
+    val success: Boolean,
+    val data: MiningEventData?,
+    val cause: String?,
 )
 
+@Serializable
 data class MiningEventData(
-    @Expose @SerializedName("event_datas") val eventData: Map<IslandType, Map<MiningEventType, EventData>>,
-    @Expose @SerializedName("running_events") val runningEvents: Map<IslandType, List<RunningEventType>>,
-    @Expose @SerializedName("total_lobbys") val totalLobbies: Map<IslandType, Int>,
-    @Expose @SerializedName("update_in") val updateIn: Long,
-    @Expose @SerializedName("curr_time") val currentTime: Long,
+    @SerialName("event_datas") val eventData: Map<IslandType, Map<MiningEventType, EventData>>,
+    @SerialName("running_events") val runningEvents: Map<IslandType, List<RunningEventType>>,
+    @SerialName("total_lobbys") val totalLobbies: Map<IslandType, Int>,
+    @SerialName("update_in") val updateIn: Long,
+    @SerialName("curr_time") val currentTime: Long,
 )
 
+@Serializable
 data class EventData(
-    @Expose @SerializedName("starts_at_min") val startMin: Long,
-    @Expose @SerializedName("starts_at_max") val startMax: Long,
-    @Expose @SerializedName("ends_at_min") val endMin: Long,
-    @Expose @SerializedName("ends_at_max") val endMax: Long,
-    @Expose @SerializedName("lobby_count") val lobbyCount: Int,
+    @SerialName("starts_at_min") val startMin: Long,
+    @SerialName("starts_at_max") val startMax: Long,
+    @SerialName("ends_at_min") val endMin: Long,
+    @SerialName("ends_at_max") val endMax: Long,
+    @SerialName("lobby_count") val lobbyCount: Int,
 )
 
+@Serializable
 data class RunningEventType(
-    @Expose val event: MiningEventType,
-    @Expose @SerializedName("ends_at") val endsAt: Long,
-    @Expose @SerializedName("lobby_count") val lobbyCount: Int,
-    @Expose @SerializedName("is_double") val isDoubleEvent: Boolean,
+    val event: MiningEventType,
+    @SerialName("ends_at") val endsAt: Long,
+    @SerialName("lobby_count") val lobbyCount: Int,
+    @SerialName("is_double") val isDoubleEvent: Boolean,
 )

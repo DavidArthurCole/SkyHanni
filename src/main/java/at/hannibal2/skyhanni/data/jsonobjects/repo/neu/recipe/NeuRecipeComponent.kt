@@ -3,7 +3,10 @@ package at.hannibal2.skyhanni.data.jsonobjects.repo.neu.recipe
 import at.hannibal2.skyhanni.utils.NeuInternalName
 import at.hannibal2.skyhanni.utils.NeuInternalName.Companion.toInternalName
 import at.hannibal2.skyhanni.utils.PrimitiveIngredient
+import at.hannibal2.skyhanni.utils.json.NeuRecipeComponentSerializer
+import kotlinx.serialization.Serializable
 
+@Serializable(with = NeuRecipeComponentSerializer::class)
 data class NeuRecipeComponent(val internalName: NeuInternalName?, val count: Int = 1) {
     fun toJsonString() = internalName?.let { "$it:$count" }.orEmpty()
 

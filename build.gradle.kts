@@ -32,6 +32,7 @@ plugins {
     alias(libs.plugins.shadow)
     id("net.fabricmc.fabric-loom")
     kotlin("jvm")
+    kotlin("plugin.serialization")
     id("com.google.devtools.ksp")
     `maven-publish`
     id("dev.detekt")
@@ -408,7 +409,8 @@ tasks.withType<KotlinCompile> {
         optIn.addAll(
             "kotlin.concurrent.atomics.ExperimentalAtomicApi",
             "kotlin.io.path.ExperimentalPathApi",
-            "kotlin.time.ExperimentalTime"
+            "kotlin.time.ExperimentalTime",
+            "kotlinx.serialization.ExperimentalSerializationApi"
         )
         freeCompilerArgs.addAll(
             // 0 (all cores) triggers a race condition in JvmIrCodegenFactory's parallel codegen on Kotlin 2.4.x,
@@ -492,6 +494,7 @@ publishing.publications {
 }
 
 detekt {
+    debug = true
     buildUponDefaultConfig = true
     config.setFrom(rootProject.layout.projectDirectory.file("detekt/detekt.yml"))
     baseline = file(rootProject.layout.projectDirectory.file("detekt/baseline-main.xml"))

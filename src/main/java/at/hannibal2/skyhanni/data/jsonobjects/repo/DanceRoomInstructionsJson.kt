@@ -1,7 +1,8 @@
 package at.hannibal2.skyhanni.data.jsonobjects.repo
 
-import com.google.gson.annotations.Expose
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class DanceRoomInstructionsJson(
-    @Expose val instructions: List<String>,
+    val instructions: List<String>,
 )

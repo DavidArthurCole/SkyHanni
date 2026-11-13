@@ -1,5 +1,6 @@
 package at.hannibal2.skyhanni.data.jsonobjects.other
 
+import at.hannibal2.skyhanni.utils.json.NbtBooleanSerializer
 import com.google.common.collect.ImmutableMultimap
 import com.google.gson.JsonObject
 import com.google.gson.annotations.Expose
@@ -8,6 +9,7 @@ import com.mojang.authlib.GameProfile
 import com.mojang.authlib.properties.Property
 import com.mojang.authlib.properties.PropertyMap
 import java.util.UUID
+import kotlinx.serialization.Serializable
 
 data class NeuNbtInfoJson(
     @Expose @SerializedName("HideFlags") val hideFlags: Int?,
@@ -55,6 +57,7 @@ fun SkullOwnerInfo.toGameProfile(): GameProfile {
     return GameProfile(UUID.fromString(this.uuid), "hannibal2", PropertyMap(builder.build()))
 }
 
+@Serializable(with = NbtBooleanSerializer::class)
 data class NbtBoolean(val boolean: Boolean) {
     fun asString(): String {
         return if (boolean) "1b" else "0b"

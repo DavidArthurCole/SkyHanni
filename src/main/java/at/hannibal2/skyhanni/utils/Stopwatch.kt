@@ -1,8 +1,11 @@
 package at.hannibal2.skyhanni.utils
 
+import at.hannibal2.skyhanni.utils.json.StopwatchSerializer
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
+import kotlinx.serialization.Serializable
 
+@Serializable(with = StopwatchSerializer::class)
 class Stopwatch(
     private var duration: Duration = 0.seconds,
     private var paused: Boolean = true,

@@ -1,10 +1,11 @@
 package at.hannibal2.skyhanni.data.jsonobjects.repo
 
 import at.hannibal2.skyhanni.utils.NeuInternalName
-import com.google.gson.annotations.Expose
-import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class GhostDropsJson(
-    @Expose @SerializedName("ghost_drops") val ghostDrops: Set<NeuInternalName>,
-    @Expose @SerializedName("sacks_drops") val sacksDrops: Set<NeuInternalName>,
+    @SerialName("ghost_drops") val ghostDrops: Set<NeuInternalName>,
+    @SerialName("sacks_drops") val sacksDrops: Set<NeuInternalName>,
 )

@@ -1,17 +1,19 @@
 package at.hannibal2.skyhanni.data.jsonobjects.repo
 
-import com.google.gson.annotations.Expose
-import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class HideNotClickableItemsJson(
-    @Expose @SerializedName("hide_npc_sell") val hideNpcSell: MultiFilterJson,
-    @Expose @SerializedName("hide_in_storage") val hideInStorage: MultiFilterJson,
-    @Expose @SerializedName("hide_player_trade") val hidePlayerTrade: MultiFilterJson,
-    @Expose @SerializedName("not_auctionable") val notAuctionable: MultiFilterJson,
-    @Expose val salvage: SalvageFilter,
+    @SerialName("hide_npc_sell") val hideNpcSell: MultiFilterJson,
+    @SerialName("hide_in_storage") val hideInStorage: MultiFilterJson,
+    @SerialName("hide_player_trade") val hidePlayerTrade: MultiFilterJson,
+    @SerialName("not_auctionable") val notAuctionable: MultiFilterJson,
+    val salvage: SalvageFilter,
 )
 
+@Serializable
 data class SalvageFilter(
-    @Expose val armor: List<String>,
-    @Expose val items: List<String>,
+    val armor: List<String>,
+    val items: List<String>,
 )

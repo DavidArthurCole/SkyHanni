@@ -5,9 +5,12 @@ import at.hannibal2.skyhanni.utils.ItemUtils.getItemCategoryOrNull
 import at.hannibal2.skyhanni.utils.NeuItems.getItemStackOrNull
 import at.hannibal2.skyhanni.utils.collection.CollectionUtils.equalsOneOf
 import at.hannibal2.skyhanni.utils.collection.TimeLimitedCache
+import at.hannibal2.skyhanni.utils.json.NeuInternalNameSerializer
 import net.minecraft.world.item.Items
 import kotlin.time.Duration.Companion.minutes
+import kotlinx.serialization.Serializable
 
+@Serializable(with = NeuInternalNameSerializer::class)
 @JvmInline
 value class NeuInternalName private constructor(private val internalName: String) : Comparable<NeuInternalName> {
 

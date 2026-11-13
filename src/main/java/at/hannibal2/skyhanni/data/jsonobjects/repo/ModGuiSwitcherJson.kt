@@ -1,14 +1,17 @@
 package at.hannibal2.skyhanni.data.jsonobjects.repo
 
-import com.google.gson.annotations.Expose
-import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.JsonNames
 
+@Serializable
 data class ModGuiSwitcherJson(
-    @Expose val mods: Map<String, OtherModInfo>,
+    val mods: Map<String, OtherModInfo>,
 )
 
+@Serializable
 data class OtherModInfo(
-    @Expose val description: List<String>,
-    @Expose val command: String,
-    @Expose @SerializedName(value = "gui_path", alternate = ["guiPath"]) val guiPath: List<String>,
+    val description: List<String>,
+    val command: String,
+    @SerialName("gui_path") @JsonNames("guiPath") val guiPath: List<String>,
 )

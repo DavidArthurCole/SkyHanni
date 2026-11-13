@@ -4,45 +4,46 @@ import at.hannibal2.skyhanni.config.core.config.Position
 import at.hannibal2.skyhanni.data.HypixelData
 import at.hannibal2.skyhanni.test.command.ErrorManager
 import at.hannibal2.skyhanni.utils.ChatUtils
-import at.hannibal2.skyhanni.utils.KSerializable
 import at.hannibal2.skyhanni.utils.SimpleTimeMark
 import at.hannibal2.skyhanni.utils.SimpleTimeMark.Companion.asTimeMark
 import at.hannibal2.skyhanni.utils.SkyBlockUtils
 import at.hannibal2.skyhanni.utils.TemplateUtil
 import at.hannibal2.skyhanni.utils.TimeUtils.format
+import at.hannibal2.skyhanni.utils.json.PositionSerializer
 import at.hannibal2.skyhanni.utils.renderables.Renderable
 import at.hannibal2.skyhanni.utils.renderables.container.HorizontalContainerRenderable.Companion.horizontal
 import at.hannibal2.skyhanni.utils.renderables.primitives.ItemStackRenderable.Companion.item
 import at.hannibal2.skyhanni.utils.renderables.primitives.text
-import com.google.gson.annotations.Expose
 import org.apache.logging.log4j.core.util.CronExpression
 import java.util.Date
 import kotlin.time.Duration.Companion.days
 import kotlin.time.Duration.Companion.seconds
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.Transient
 
 // Taken and modified from Not Enough Updates https://github.com/NotEnoughUpdates/NotEnoughUpdates
-@KSerializable
+@Serializable
 data class CustomTodo(
-    @Expose var label: String,
-    @Expose var timer: Int,
-    @Expose var trigger: String,
-    @Expose var antiTrigger: String = "",
-    @Expose var icon: String,
-    @Expose var isResetOffset: Boolean,
-    @Expose var showWhen: Int = 0,
-    @Expose var showOnlyWhenReady: Boolean = false,
-    @Expose var triggerTarget: TriggerTarget = TriggerTarget.CHAT,
-    @Expose var triggerMatcher: TriggerMatcher = TriggerMatcher.CONTAINS,
-    @Expose var readyAt: MutableMap<String, SimpleTimeMark> = mutableMapOf(),
-    @Expose var isEnabled: Boolean = true,
-    @Expose var ignoreColorCodes: Boolean = true,
-    @Expose var position: Position = Position(10, 10),
-    @Expose var totalTriggers: Int = 1,
-    @Expose var triggersLeft: MutableMap<String, Int> = mutableMapOf(),
-    @Expose var cronEnabled: Boolean = false,
-    @Expose var cronExpression: String = "",
-    @Expose var downloaded: Boolean = false,
-    @Expose var downloadedId: String = "",
+    var label: String,
+    var timer: Int,
+    var trigger: String,
+    var antiTrigger: String = "",
+    var icon: String,
+    var isResetOffset: Boolean,
+    var showWhen: Int = 0,
+    var showOnlyWhenReady: Boolean = false,
+    var triggerTarget: TriggerTarget = TriggerTarget.CHAT,
+    var triggerMatcher: TriggerMatcher = TriggerMatcher.CONTAINS,
+    var readyAt: MutableMap<String, SimpleTimeMark> = mutableMapOf(),
+    var isEnabled: Boolean = true,
+    var ignoreColorCodes: Boolean = true,
+    @Serializable(with = PositionSerializer::class) var position: Position = Position(10, 10),
+    var totalTriggers: Int = 1,
+    var triggersLeft: MutableMap<String, Int> = mutableMapOf(),
+    var cronEnabled: Boolean = false,
+    var cronExpression: String = "",
+    var downloaded: Boolean = false,
+    var downloadedId: String = "",
 ) {
     enum class TriggerMatcher {
         REGEX,
@@ -133,8 +134,8 @@ data class CustomTodo(
         const val MS_IN_A_DAY = (24 * 60 * 60 * 1000)
 
         fun fromTemplateOrNull(data: String, printErrors: Boolean = false): CustomTodo? {
-            val maybeDecoded = TemplateUtil.maybeDecodeTemplate(TEMPLATE_PREFIX, data, CustomTodo::class.java)
-                ?: TemplateUtil.maybeDecodeTemplate(NEU_TEMPLATE_PREFIX, data, CustomTodo::class.java)
+            val maybeDecoded = TemplateUtil.maybeDecodeTemplate(TEMPLATE_PREFIX, data, serializer())
+                ?: TemplateUtil.maybeDecodeTemplate(NEU_TEMPLATE_PREFIX, data, serializer())
             if (maybeDecoded == null && printErrors) {
                 ChatUtils.userError("Invalid Todo")
             }
@@ -157,6 +158,7 @@ data class CustomTodo(
     fun toTemplate(): String {
         return TemplateUtil.encodeTemplate(
             TEMPLATE_PREFIX,
+            serializer(),
             this.copy(readyAt = mutableMapOf(), triggersLeft = mutableMapOf(), downloaded = false, downloadedId = ""),
         )
     }
@@ -204,7 +206,10 @@ data class CustomTodo(
         return timeMark.timeUntil().format(maxUnits = 2)
     }
 
+    @Transient
     private var compiledRegex: Regex? = null
+
+    @Transient
     private var compiledAntiTriggerRegex: Regex? = null
 
     fun getRegex(): Regex? {

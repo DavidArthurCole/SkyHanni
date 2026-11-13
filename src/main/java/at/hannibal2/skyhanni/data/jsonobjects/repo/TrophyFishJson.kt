@@ -1,16 +1,19 @@
 package at.hannibal2.skyhanni.data.jsonobjects.repo
 
 import at.hannibal2.skyhanni.features.fishing.trophy.TrophyRarity
-import com.google.gson.annotations.Expose
-import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.JsonNames
 
+@Serializable
 data class TrophyFishJson(
-    @Expose @SerializedName("trophy_fish") val trophyFish: Map<String, TrophyFishInfo>,
+    @SerialName("trophy_fish") val trophyFish: Map<String, TrophyFishInfo>,
 )
 
+@Serializable
 data class TrophyFishInfo(
-    @Expose @SerializedName(value = "display_name", alternate = ["displayName"]) val displayName: String,
-    @Expose val description: String,
-    @Expose val rate: Int?,
-    @Expose val fillet: Map<TrophyRarity, Int>,
+    @SerialName("display_name") @JsonNames("displayName") val displayName: String,
+    val description: String,
+    val rate: Int?,
+    val fillet: Map<TrophyRarity, Int>,
 )

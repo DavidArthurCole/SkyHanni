@@ -1,17 +1,18 @@
 package at.hannibal2.skyhanni.data.bingo
 
 import at.hannibal2.skyhanni.utils.SimpleTimeMark
-import com.google.gson.annotations.Expose
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class BingoApiResponseJson(
-    @Expose val success: Boolean,
-    @Expose val lastUpdated: SimpleTimeMark,
-    @Expose val id: Int,
-    @Expose val name: String,
-    @Expose val start: SimpleTimeMark,
-    @Expose val end: SimpleTimeMark,
-    @Expose val modifier: BingoModifier,
-    @Expose val goals: List<BingoGoalJson>,
+    val success: Boolean,
+    val lastUpdated: SimpleTimeMark,
+    val id: Int,
+    val name: String,
+    val start: SimpleTimeMark,
+    val end: SimpleTimeMark,
+    val modifier: BingoModifier,
+    val goals: List<BingoGoalJson>,
 )
 
 @Suppress("unused")
@@ -21,12 +22,13 @@ enum class BingoModifier {
     SECRET,
 }
 
+@Serializable
 data class BingoGoalJson(
-    @Expose val id: String,
-    @Expose val name: String,
-    @Expose val tiers: List<Int>?,
-    @Expose val lore: String?,
-    @Expose val fullLore: List<String>?,
-    @Expose val progress: Int?,
-    @Expose val requiredAmount: Int?,
+    val id: String,
+    val name: String,
+    val tiers: List<Int>?,
+    val lore: String?,
+    val fullLore: List<String>?,
+    val progress: Int?,
+    val requiredAmount: Int?,
 )

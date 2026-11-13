@@ -1,7 +1,6 @@
 package at.hannibal2.skyhanni.api.enoughupdates
 
 import at.hannibal2.skyhanni.api.event.HandleEvent
-import at.hannibal2.skyhanni.config.ConfigManager
 import at.hannibal2.skyhanni.data.PetData
 import at.hannibal2.skyhanni.data.jsonobjects.repo.neu.NEURaritySpecificPetNums
 import at.hannibal2.skyhanni.data.jsonobjects.repo.neu.NeuItemJson
@@ -33,7 +32,7 @@ import at.hannibal2.skyhanni.utils.compat.getIdentifierString
 import at.hannibal2.skyhanni.utils.compat.getVanillaItem
 import at.hannibal2.skyhanni.utils.compat.setCustomItemName
 import at.hannibal2.skyhanni.utils.itemType
-import at.hannibal2.skyhanni.utils.json.fromJsonOrNull
+import at.hannibal2.skyhanni.utils.json.SkyHanniJson
 import com.google.gson.JsonArray
 import com.google.gson.JsonObject
 import com.google.gson.JsonPrimitive
@@ -98,8 +97,7 @@ object EnoughUpdatesManager {
         val parsedItems = list.mapNotNullAsync { name ->
             try {
                 val internalName = name.removeSuffix(".json")
-                val itemJson = fileSystem.readJson("items/$name").asJsonObject
-                val tryParsedItem = parseItem(itemJson)
+                val tryParsedItem = parseItem(fileSystem.readText("items/$name"))
                 progress.innerProgressStep()
                 val parsedItem = tryParsedItem ?: return@mapNotNullAsync null
                 internalName.toInternalName() to parsedItem
@@ -142,13 +140,13 @@ object EnoughUpdatesManager {
         }
     }
 
-    private fun parseItem(json: JsonObject): NeuItemJson? = runCatching {
-        val itemJson: NeuItemJson = ConfigManager.gson.fromJsonOrNull<NeuItemJson>(json) ?: return@runCatching null
+    private fun parseItem(json: String): NeuItemJson? {
+        val itemJson = runCatching { SkyHanniJson.json.decodeFromString(NeuItemJson.serializer(), json) }.getOrNull() ?: return null
         itemJson.itemId.getVanillaItem()?.let { mcItem ->
             itemJson.itemId = mcItem.getIdentifierString()
         }
         return itemJson
-    }.getOrThrow()
+    }
 
     fun getItemById(id: String): NeuItemJson? = getItemById(id.toInternalName())
     fun getItemById(internalName: NeuInternalName): NeuItemJson? =

@@ -1,5 +1,9 @@
 package at.hannibal2.skyhanni.utils.system
 
+import at.hannibal2.skyhanni.utils.json.MCVersionSerializer
+import kotlinx.serialization.Serializable
+
+@Serializable(with = MCVersionSerializer::class)
 data class MCVersion(val epoch: Int, val major: Int, val minor: Int) : Comparable<MCVersion> {
 
     inline val asString get() = toString()

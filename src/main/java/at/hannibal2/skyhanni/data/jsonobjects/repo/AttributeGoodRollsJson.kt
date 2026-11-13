@@ -1,13 +1,15 @@
 package at.hannibal2.skyhanni.data.jsonobjects.repo
 
-import com.google.gson.annotations.Expose
-import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class AttributeGoodRollsJson(
-    @Expose @SerializedName("good_rolls") val goodRolls: Map<String, ItemRoll>,
+    @SerialName("good_rolls") val goodRolls: Map<String, ItemRoll>,
 )
 
+@Serializable
 data class ItemRoll(
-    @Expose val regex: String,
-    @Expose val list: List<List<String>>,
+    val regex: String,
+    val list: List<List<String>>,
 )

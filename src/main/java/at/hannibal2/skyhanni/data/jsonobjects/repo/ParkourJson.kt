@@ -1,15 +1,18 @@
 package at.hannibal2.skyhanni.data.jsonobjects.repo
 
 import at.hannibal2.skyhanni.utils.LorenzVec
-import com.google.gson.annotations.Expose
-import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.JsonNames
 
+@Serializable
 data class ParkourJson(
-    @Expose val locations: List<LorenzVec>,
-    @Expose @SerializedName(value = "short_cuts", alternate = ["shortCuts"]) val shortCuts: List<ParkourShortCut> = listOf(),
+    val locations: List<LorenzVec>,
+    @SerialName("short_cuts") @JsonNames("shortCuts") val shortCuts: List<ParkourShortCut> = listOf(),
 )
 
+@Serializable
 data class ParkourShortCut(
-    @Expose val from: Int,
-    @Expose val to: Int,
+    val from: Int,
+    val to: Int,
 )

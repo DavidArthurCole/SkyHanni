@@ -1,8 +1,9 @@
 package at.hannibal2.skyhanni.data.jsonobjects.repo.neu
 
-import com.google.gson.annotations.Expose
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class NeuEssenceShopJson(
-    @Expose val name: String,
-    @Expose val costs: List<Int>,
+    val name: String,
+    val costs: List<Int>,
 )

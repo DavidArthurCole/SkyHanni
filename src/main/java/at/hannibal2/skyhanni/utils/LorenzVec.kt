@@ -2,6 +2,7 @@ package at.hannibal2.skyhanni.utils
 
 import at.hannibal2.skyhanni.utils.LocationUtils.calculateEdges
 import at.hannibal2.skyhanni.utils.NumberUtil.roundTo
+import at.hannibal2.skyhanni.utils.json.LorenzVecSerializer
 import com.google.gson.annotations.Expose
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Rotations
@@ -21,7 +22,9 @@ import kotlin.math.pow
 import kotlin.math.round
 import kotlin.math.sin
 import kotlin.math.sqrt
+import kotlinx.serialization.Serializable
 
+@Serializable(with = LorenzVecSerializer::class)
 @Suppress("TooManyFunctions", "MemberVisibilityCanBePrivate")
 data class LorenzVec(
     val x: Double,

@@ -1,8 +1,9 @@
 package at.hannibal2.skyhanni.data.jsonobjects.repo
 
-import com.google.gson.annotations.Expose
-import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class MiningJson(
-    @Expose @SerializedName("block_strengths") val blockStrengths: Map<String, Int>,
+    @SerialName("block_strengths") val blockStrengths: Map<String, Int>,
 )

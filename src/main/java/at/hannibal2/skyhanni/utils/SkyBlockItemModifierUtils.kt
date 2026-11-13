@@ -22,8 +22,7 @@ import at.hannibal2.skyhanni.utils.compat.getDoubleOrDefault
 import at.hannibal2.skyhanni.utils.compat.getIntOrDefault
 import at.hannibal2.skyhanni.utils.compat.getLongOrDefault
 import at.hannibal2.skyhanni.utils.compat.getStringOrDefault
-import com.google.gson.JsonObject
-import com.google.gson.annotations.Expose
+import at.hannibal2.skyhanni.utils.json.UuidSerializer
 import net.minecraft.core.component.DataComponents
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.nbt.CompoundTag
@@ -33,6 +32,8 @@ import java.util.Locale
 import java.util.UUID
 import kotlin.time.Duration.Companion.minutes
 import kotlin.time.Duration.Companion.seconds
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.JsonObject
 
 @Suppress("TooManyFunctions")
 object SkyBlockItemModifierUtils {
@@ -87,21 +88,22 @@ object SkyBlockItemModifierUtils {
 
     private fun SafeItemStack.isDungeonItem() = getLore().any { it.contains("DUNGEON ") }
 
-    @KSerializable
+    @Serializable
     data class PetInfo(
-        @Expose val type: String,
-        @Expose val active: Boolean = false,
-        @Expose val exp: Double = 0.0,
-        @Expose val tier: LorenzRarity,
-        @Expose val hideInfo: Boolean = false,
-        @Expose val heldItem: NeuInternalName? = null,
-        @Expose val candyUsed: Int = 0,
-        @Expose val skin: String? = null,
-        @Expose private val uuid: UUID? = null,
-        @Expose private val uniqueId: UUID? = null, // Only null when pet is read from a shop, or another non-"owned" source
-        @Expose val hideRightClick: Boolean? = null,
-        @Expose val noMove: Boolean? = null,
-        @Expose val extraData: JsonObject? = null,
+        val type: String,
+        val active: Boolean = false,
+        val exp: Double = 0.0,
+        val tier: LorenzRarity,
+        val hideInfo: Boolean = false,
+        val heldItem: NeuInternalName? = null,
+        val candyUsed: Int = 0,
+        val skin: String? = null,
+        @Serializable(with = UuidSerializer::class) private val uuid: UUID? = null,
+        // Only null when pet is read from a shop, or another non-"owned" source
+        @Serializable(with = UuidSerializer::class) private val uniqueId: UUID? = null,
+        val hideRightClick: Boolean? = null,
+        val noMove: Boolean? = null,
+        val extraData: JsonObject? = null,
     ) {
         val ownedUuid: UUID? get() = uniqueId ?: uuid
         val properSkinItem get() = skin?.let { "PET_SKIN_$skin".toInternalName() }

@@ -67,8 +67,6 @@ import at.hannibal2.skyhanni.utils.renderables.ItemStackProvider
 import at.hannibal2.skyhanni.utils.repopatterns.RepoPattern
 import at.hannibal2.skyhanni.utils.system.PlatformUtils
 import com.google.common.collect.ImmutableMultimap
-import com.google.gson.annotations.Expose
-import com.google.gson.annotations.SerializedName
 import com.mojang.authlib.GameProfile
 import com.mojang.authlib.properties.Property
 import com.mojang.authlib.properties.PropertyMap
@@ -92,6 +90,8 @@ import java.util.regex.Matcher
 import kotlin.time.Duration.Companion.INFINITE
 import kotlin.time.Duration.Companion.minutes
 import kotlin.time.Duration.Companion.seconds
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
 // TODO refactor
 @SkyHanniModule
@@ -691,9 +691,10 @@ object ItemUtils {
     var bazaarOverrides = mapOf<String, String>()
         private set
 
+    @Serializable
     internal data class BazaarOverride(
-        @Expose @SerializedName("stock") val bazaarInternalName: String,
-        @Expose @SerializedName("id") val neuInternalName: String,
+        @SerialName("stock") val bazaarInternalName: String,
+        @SerialName("id") val neuInternalName: String,
     )
 
     @HandleEvent

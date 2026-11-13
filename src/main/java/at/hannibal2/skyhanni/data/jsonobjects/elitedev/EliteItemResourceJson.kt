@@ -6,7 +6,6 @@ import at.hannibal2.skyhanni.features.nether.kuudra.KuudraTier
 import at.hannibal2.skyhanni.features.nether.reputationhelper.FactionType
 import at.hannibal2.skyhanni.features.slayer.SlayerType
 import at.hannibal2.skyhanni.utils.ItemCategory
-import at.hannibal2.skyhanni.utils.KSerializable
 import at.hannibal2.skyhanni.utils.LorenzColor
 import at.hannibal2.skyhanni.utils.LorenzRarity
 import at.hannibal2.skyhanni.utils.NeuInternalName
@@ -14,51 +13,55 @@ import at.hannibal2.skyhanni.utils.NeuInternalName.Companion.toInternalName
 import at.hannibal2.skyhanni.utils.NumberUtil.romanToDecimalIfNecessary
 import at.hannibal2.skyhanni.utils.SkyBlockItemModifierUtils
 import at.hannibal2.skyhanni.utils.TimeUnit
-import com.google.gson.annotations.Expose
-import com.google.gson.annotations.SerializedName
 import io.github.notenoughupdates.moulconfig.ChromaColour
 import kotlin.time.Duration
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.JsonObject
 
-@KSerializable
+@Serializable
 data class EliteItemResponse(
-    @Expose val items: Map<NeuInternalName, EliteItem>,
+    val items: Map<NeuInternalName, EliteItem>,
 )
 
 // <editor-fold desc="Helpers to parse to SH formats">
 enum class SoulboundType { NONE, SOLO, COOP }
 
+@Serializable
 data class EliteSkin(
-    @Expose val value: String,
-    @Expose val signature: String,
+    val value: String,
+    val signature: String,
 )
 
 enum class SlotCostType { COINS, ITEM }
 
-@KSerializable
+@Serializable
 data class EliteGemstoneSlotCost(
-    @Expose private val type: String,
-    @Expose val coins: Int? = null,
-    @Expose @SerializedName("item_id") val itemId: NeuInternalName? = null,
-    @Expose @SerializedName("amount") val amount: Int? = null,
+    private val type: String,
+    val coins: Int? = null,
+    @SerialName("item_id") val itemId: NeuInternalName? = null,
+    @SerialName("amount") val amount: Int? = null,
 ) {
-    val costType: SlotCostType = SlotCostType.valueOf(type.uppercase())
+    val costType: SlotCostType by lazy { SlotCostType.valueOf(type.uppercase()) }
 }
 
-@KSerializable
+@Serializable
 data class EliteGemstoneSlot(
-    @Expose @SerializedName("slot_type") private val slotTypeStr: String,
-    @Expose @SerializedName("costs") private val eliteCosts: List<EliteGemstoneSlotCost> = emptyList(),
+    @SerialName("slot_type") private val slotTypeStr: String,
+    @SerialName("costs") private val eliteCosts: List<EliteGemstoneSlotCost> = emptyList(),
 ) {
-    val slotType = SkyBlockItemModifierUtils.GemstoneSlotType.getByName(slotTypeStr)
-    val costs: Map<NeuInternalName, Int> = eliteCosts.mapNotNull { cost ->
-        when (cost.costType) {
-            SlotCostType.COINS -> NeuInternalName.SKYBLOCK_COIN to (cost.coins ?: 0)
-            SlotCostType.ITEM -> {
-                val itemId = cost.itemId ?: return@mapNotNull null
-                itemId to (cost.amount ?: 0)
+    val slotType by lazy { SkyBlockItemModifierUtils.GemstoneSlotType.getByName(slotTypeStr) }
+    val costs: Map<NeuInternalName, Int> by lazy {
+        eliteCosts.mapNotNull { cost ->
+            when (cost.costType) {
+                SlotCostType.COINS -> NeuInternalName.SKYBLOCK_COIN to (cost.coins ?: 0)
+                SlotCostType.ITEM -> {
+                    val itemId = cost.itemId ?: return@mapNotNull null
+                    itemId to (cost.amount ?: 0)
+                }
             }
-        }
-    }.associate { it }
+        }.associate { it }
+    }
 }
 
 enum class EliteRequirementType {
@@ -72,77 +75,85 @@ enum class EliteRequirementType {
     TARGET_PRACTICE, TROPHY_FISHING,
 }
 
-@KSerializable
+@Serializable
 data class EliteItemRequirement(
-    @Expose val type: EliteRequirementType,
+    val type: EliteRequirementType,
     // Slayer, Skill
-    @Expose val level: Int? = null,
+    val level: Int? = null,
     // Collection, Dungeon
-    @Expose val tier: Int? = null,
+    val tier: Int? = null,
 
     // Kuudra
-    @Expose @SerializedName("kuudra_tier") val kuudraTier: KuudraTier? = null,
+    @SerialName("kuudra_tier") val kuudraTier: KuudraTier? = null,
     // Dungeon
-    @Expose @SerializedName("dungeon_type") val dungeonType: String? = null,
+    @SerialName("dungeon_type") val dungeonType: String? = null,
     // Slayer
-    @Expose @SerializedName("slayer_boss_type") private val slayerBossTypeStr: String? = null,
+    @SerialName("slayer_boss_type") private val slayerBossTypeStr: String? = null,
     // Skill
-    @Expose val skill: SkyblockStat? = null,
+    val skill: SkyblockStat? = null,
     // Collection
-    @Expose val collection: String? = null,
+    val collection: String? = null,
     // Target Practice
-    @Expose @SerializedName("mode") private val eliteMode: String? = null,
+    @SerialName("mode") private val eliteMode: String? = null,
     // CI Reputation
-    @Expose @SerializedName("faction") private val ciFactionStr: String? = null,
-    @Expose @SerializedName("reputation") val ciReputation: Int? = null,
+    @SerialName("faction") private val ciFactionStr: String? = null,
+    @SerialName("reputation") val ciReputation: Int? = null,
     // Trophy Fishing
-    @Expose @SerializedName("reward") private val trophyFishingTier: TrophyRarity? = null,
+    @SerialName("reward") private val trophyFishingTier: TrophyRarity? = null,
     // Hoppity
-    @Expose val rabbit: String? = null,
+    val rabbit: String? = null,
     // Profile Age
-    @Expose @SerializedName("minimum_age") private val minimumAgeInt: Int? = null,
-    @Expose @SerializedName("minimum_age_unit") private val minimumAgeUnitStr: String? = null,
+    @SerialName("minimum_age") private val minimumAgeInt: Int? = null,
+    @SerialName("minimum_age_unit") private val minimumAgeUnitStr: String? = null,
 
     // "One of" requirements
-    @Expose @SerializedName("lore_index") val loreIndex: Int? = null,
-    @Expose @SerializedName("requirements") val oneOfRequirements: List<EliteItemRequirement>? = null,
+    @SerialName("lore_index") val loreIndex: Int? = null,
+    @SerialName("requirements") val oneOfRequirements: List<EliteItemRequirement>? = null,
 ) {
-    val minimumAge: Duration? = minimumAgeInt?.let { rawInt ->
-        val ageUnit: TimeUnit = minimumAgeUnitStr?.let {
-            TimeUnit.getByName(it.uppercase())
-        } ?: return@let null
-        ageUnit.asDuration(rawInt)
+    val minimumAge: Duration? by lazy {
+        minimumAgeInt?.let { rawInt ->
+            val ageUnit: TimeUnit = minimumAgeUnitStr?.let {
+                TimeUnit.getByName(it.uppercase())
+            } ?: return@let null
+            ageUnit.asDuration(rawInt)
+        }
     }
-    val slayerBossType: SlayerType? = slayerBossTypeStr?.let {
-        SlayerType.getByClassName(it)
+    val slayerBossType: SlayerType? by lazy {
+        slayerBossTypeStr?.let {
+            SlayerType.getByClassName(it)
+        }
     }
-    val targetPracticeMode: Int? = eliteMode?.romanToDecimalIfNecessary()
-    val ciFaction: FactionType? = ciFactionStr?.let {
-        FactionType.valueOf(it.removeSuffix("S").uppercase())
+    val targetPracticeMode: Int? by lazy { eliteMode?.romanToDecimalIfNecessary() }
+    val ciFaction: FactionType? by lazy {
+        ciFactionStr?.let {
+            FactionType.valueOf(it.removeSuffix("S").uppercase())
+        }
     }
 }
 
-@KSerializable
+@Serializable
 data class EliteItemCatacombRequirement(
-    @Expose val type: String,
-    @Expose @SerializedName("dungeon_type") val dungeonType: String? = null,
-    @Expose val level: Int,
+    val type: String,
+    @SerialName("dungeon_type") val dungeonType: String? = null,
+    val level: Int,
 )
 
 enum class UpgradeCostType { ESSENCE, ITEM }
 
-@KSerializable
+@Serializable
 @Suppress("unused")
 data class EliteItemUpgradeCost(
-    @Expose val type: UpgradeCostType,
-    @Expose @SerializedName("essence_type") val eliteEssenceType: String? = null,
-    @Expose @SerializedName("item_id") val itemId: NeuInternalName? = null,
-    @Expose val amount: Int,
+    val type: UpgradeCostType,
+    @SerialName("essence_type") val eliteEssenceType: String? = null,
+    @SerialName("item_id") val itemId: NeuInternalName? = null,
+    val amount: Int,
 ) {
-    private val essenceType: NeuInternalName? = eliteEssenceType?.let {
-        "ESSENCE_$it".toInternalName()
+    private val essenceType: NeuInternalName? by lazy {
+        eliteEssenceType?.let {
+            "ESSENCE_$it".toInternalName()
+        }
     }
-    private val item: NeuInternalName? = itemId ?: essenceType
+    private val item: NeuInternalName? by lazy { itemId ?: essenceType }
 }
 
 enum class EliteMuseumType { ARMOR_SETS, WEAPONS, RARITIES }
@@ -156,117 +167,122 @@ enum class EliteMuseumGameStage {
     MASTER,
 }
 
-@KSerializable
-@Suppress("PrivatePropertyName")
+@Serializable
 data class EliteMuseumData(
-    @Expose private val donation_xp: Int,
-    @Expose private val parent: Map<String, String>? = null,
-    @Expose val type: EliteMuseumType,
-    @Expose @SerializedName("armor_set_donation_xp") val armorSetDonationXp: Map<String, Int>? = null,
-    @Expose @SerializedName("game_stage") val gameStage: EliteMuseumGameStage,
-    @Expose @SerializedName("mapped_item_ids") val mappedItemIds: List<NeuInternalName> = emptyList(),
+    @SerialName("donation_xp") val donationXp: Int,
+    private val parent: Map<String, String>? = null,
+    val type: EliteMuseumType,
+    @SerialName("armor_set_donation_xp") val armorSetDonationXp: Map<String, Int>? = null,
+    @SerialName("game_stage") val gameStage: EliteMuseumGameStage,
+    @SerialName("mapped_item_ids") val mappedItemIds: List<NeuInternalName> = emptyList(),
 ) {
-    val donationXp: Int = donation_xp
-    val selfIdentifier: String? = parent?.entries?.first()?.key
-    val parentIdentifier: String? = parent?.entries?.first()?.value
+    val selfIdentifier: String? get() = parent?.entries?.first()?.key
+    val parentIdentifier: String? get() = parent?.entries?.first()?.value
 }
 
 enum class EliteItemOrigin { RIFT, BINGO }
 // </editor-fold>
 
-@KSerializable
+@Serializable
 data class EliteItem(
-    @Expose private val id: NeuInternalName,
-    @Expose val material: String,
-    @Expose val durability: Int? = null,
-    @Expose val skin: EliteSkin? = null,
-    @Expose val name: String,
-    @Expose @SerializedName("description") val dirtyDescription: String? = null,
-    @Expose @SerializedName("category") private val itemCategory: String? = null,
-    @Expose @SerializedName("tier") val rarity: LorenzRarity? = null,
-    @Expose @SerializedName("has_uuid") val hasUuid: Boolean? = null,
-    @Expose @SerializedName("item_model") val itemModel: String? = null,
-    @Expose @SerializedName("soulbound") val soulboundType: SoulboundType? = null,
-    @Expose @SerializedName("npc_sell_price") val npcSellPrice: Double? = null,
-    @Expose val origin: EliteItemOrigin? = null,
+    @SerialName("id") val internalName: NeuInternalName,
+    val material: String,
+    val durability: Int? = null,
+    val skin: EliteSkin? = null,
+    val name: String,
+    @SerialName("description") val dirtyDescription: String? = null,
+    @SerialName("category") private val itemCategory: String? = null,
+    @SerialName("tier") val rarity: LorenzRarity? = null,
+    @SerialName("has_uuid") val hasUuid: Boolean? = null,
+    @SerialName("item_model") val itemModel: String? = null,
+    @SerialName("soulbound") val soulboundType: SoulboundType? = null,
+    @SerialName("npc_sell_price") val npcSellPrice: Double? = null,
+    val origin: EliteItemOrigin? = null,
 
     // Minecraft fields that hypixel uses
-    @Expose val unstackable: Boolean? = null,
-    @Expose val glowing: Boolean? = null,
-    @Expose @SerializedName("can_interact") val canInteract: Boolean? = null,
-    @Expose @SerializedName("can_interact_right_click") val canInteractRightClick: Boolean? = null,
+    val unstackable: Boolean? = null,
+    val glowing: Boolean? = null,
+    @SerialName("can_interact") val canInteract: Boolean? = null,
+    @SerialName("can_interact_right_click") val canInteractRightClick: Boolean? = null,
 
-    @Expose val furniture: NeuInternalName? = null, // Furniture item, if applicable
-    @Expose @SerializedName("color") val eliteColor: String? = null, // Specific to dye-able items
+    val furniture: NeuInternalName? = null, // Furniture item, if applicable
+    @SerialName("color") val eliteColor: String? = null, // Specific to dye-able items
 
     // There were way too many specific fields for item modifiers, so we just use a map of Any to Any
     // Create your own data class if you want to parse specific modifiers for an item
-    @Expose @SerializedName("item_specific") val itemSpecific: Map<Any, Any>? = null,
+    @SerialName("item_specific") val itemSpecific: JsonObject? = null,
 
     /** Museum Related */
-    @Expose val museum: Boolean? = null,
-    @Expose @SerializedName("museum_data") val museumData: EliteMuseumData? = null,
+    val museum: Boolean? = null,
+    @SerialName("museum_data") val museumData: EliteMuseumData? = null,
 
     /** Usage Related */
-    @Expose val requirements: List<EliteItemRequirement>? = null,
-    @Expose @SerializedName("stats") private val eliteStats: Map<String, Double>? = null,
-    @Expose @SerializedName("tiered_stats") private val eliteTieredStats: Map<String, List<Double>>? = null,
+    val requirements: List<EliteItemRequirement>? = null,
+    @SerialName("stats") private val eliteStats: Map<String, Double>? = null,
+    @SerialName("tiered_stats") private val eliteTieredStats: Map<String, List<Double>>? = null,
 
     /** Minions */
-    @Expose @SerializedName("generator_tier") val minionTier: Int? = null,
-    @Expose @SerializedName("generator") val minionType: String? = null,
+    @SerialName("generator_tier") val minionTier: Int? = null,
+    @SerialName("generator") val minionType: String? = null,
 
     /** Upgrade Related */
-    @Expose @SerializedName("upgrade_costs") val upgradeCosts: List<List<EliteItemUpgradeCost>>? = null,
-    @Expose @SerializedName("can_have_power_scroll") val canHavePowerScroll: Boolean? = null,
-    @Expose @SerializedName("gemstone_slots") val gemstoneSlots: List<EliteGemstoneSlot>? = null,
-    @Expose @SerializedName("can_have_attributes") val canHaveAttributes: Boolean? = null,
+    @SerialName("upgrade_costs") val upgradeCosts: List<List<EliteItemUpgradeCost>>? = null,
+    @SerialName("can_have_power_scroll") val canHavePowerScroll: Boolean? = null,
+    @SerialName("gemstone_slots") val gemstoneSlots: List<EliteGemstoneSlot>? = null,
+    @SerialName("can_have_attributes") val canHaveAttributes: Boolean? = null,
 
     /** Dungeon Specific */
-    @Expose @SerializedName("dungeon_item") val isDungeonItem: Boolean? = null,
-    @Expose @SerializedName("rarity_salvageable") val raritySalvageable: Boolean? = null,
-    @Expose @SerializedName("catacombs_requirements") val catacombsRequirements: List<EliteItemCatacombRequirement>? = null,
+    @SerialName("dungeon_item") val isDungeonItem: Boolean? = null,
+    @SerialName("rarity_salvageable") val raritySalvageable: Boolean? = null,
+    @SerialName("catacombs_requirements") val catacombsRequirements: List<EliteItemCatacombRequirement>? = null,
 
     /** Rift Specific */
-    @Expose @SerializedName("rift_transferrable") val riftTransferrable: Boolean? = null,
-    @Expose @SerializedName("motes_sell_price") val motesSellPrice: Double? = null,
-    @Expose @SerializedName("lose_motes_value_on_transfer") val loseMotesValueOnTransfer: Boolean? = null,
+    @SerialName("rift_transferrable") val riftTransferrable: Boolean? = null,
+    @SerialName("motes_sell_price") val motesSellPrice: Double? = null,
+    @SerialName("lose_motes_value_on_transfer") val loseMotesValueOnTransfer: Boolean? = null,
 ) {
-    val internalName: NeuInternalName = id
     // Example of why we need this:
     // "description": "%%gray%%%%italic%%A perfectly fine tooth, besides its radiant brightness..."
-    val description: String? = dirtyDescription?.let {
-        // Match all groups of %%...%%
-        val matcher = formattingMatcher.matcher(it)
-        if (!matcher.find()) return@let it // No formatting found, return original description
-        // Replace all matched groups with their corresponding replacements
-        var formattedDescription = it
-        do {
-            val matchedGroup = matcher.group(1) ?: continue
-            val replacementMap = getReplacementMap(matchedGroup)
-            for ((key, value) in replacementMap) {
-                formattedDescription = formattedDescription.replace(key, value)
-            }
-        } while (matcher.find())
-        formattedDescription
+    val description: String? by lazy {
+        dirtyDescription?.let {
+            // Match all groups of %%...%%
+            val matcher = formattingMatcher.matcher(it)
+            if (!matcher.find()) return@let it // No formatting found, return original description
+            // Replace all matched groups with their corresponding replacements
+            var formattedDescription = it
+            do {
+                val matchedGroup = matcher.group(1) ?: continue
+                val replacementMap = getReplacementMap(matchedGroup)
+                for ((key, value) in replacementMap) {
+                    formattedDescription = formattedDescription.replace(key, value)
+                }
+            } while (matcher.find())
+            formattedDescription
+        }
     }
 
-    val color: ChromaColour? = eliteColor?.let { colorStr ->
-        val splits = colorStr.split(",").takeIf { it.size == 3 } ?: return@let null
-        val red = splits.getOrNull(0)?.toIntOrNull() ?: return@let null
-        val green = splits.getOrNull(1)?.toIntOrNull() ?: return@let null
-        val blue = splits.getOrNull(2)?.toIntOrNull() ?: return@let null
-        ChromaColour.fromStaticRGB(red, green, blue, 255)
+    val color: ChromaColour? by lazy {
+        eliteColor?.let { colorStr ->
+            val splits = colorStr.split(",").takeIf { it.size == 3 } ?: return@let null
+            val red = splits.getOrNull(0)?.toIntOrNull() ?: return@let null
+            val green = splits.getOrNull(1)?.toIntOrNull() ?: return@let null
+            val blue = splits.getOrNull(2)?.toIntOrNull() ?: return@let null
+            ChromaColour.fromStaticRGB(red, green, blue, 255)
+        }
     }
-    val category: ItemCategory? = itemCategory?.let { ItemCategory.valueOf(it) }
-    val stats: Map<SkyblockStat, Double>? = eliteStats?.mapNotNull { (statKey, value) ->
-        val skyblockStat = SkyblockStat.getValueOrNull(statKey) ?: return@mapNotNull null
-        skyblockStat to value
-    }?.associate { it }
-    val tieredStats: Map<SkyblockStat, List<Double>>? = eliteTieredStats?.mapNotNull { (statKey, values) ->
-        val skyblockStat = SkyblockStat.getValueOrNull(statKey) ?: return@mapNotNull null
-        skyblockStat to values
-    }?.associate { it }
+    val category: ItemCategory? by lazy { itemCategory?.let { ItemCategory.valueOf(it) } }
+    val stats: Map<SkyblockStat, Double>? by lazy {
+        eliteStats?.mapNotNull { (statKey, value) ->
+            val skyblockStat = SkyblockStat.getValueOrNull(statKey) ?: return@mapNotNull null
+            skyblockStat to value
+        }?.associate { it }
+    }
+    val tieredStats: Map<SkyblockStat, List<Double>>? by lazy {
+        eliteTieredStats?.mapNotNull { (statKey, values) ->
+            val skyblockStat = SkyblockStat.getValueOrNull(statKey) ?: return@mapNotNull null
+            skyblockStat to values
+        }?.associate { it }
+    }
 
     companion object {
         private val formattingMatcher = Regex("%%(.*?)%%").toPattern()

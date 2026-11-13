@@ -1,15 +1,16 @@
 package at.hannibal2.skyhanni.data.jsonobjects.repo
 
 import at.hannibal2.skyhanni.utils.NeuInternalName
-import com.google.gson.annotations.Expose
-import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class TreeGiftBonusDropsJson(
-    @Expose @SerializedName("uncommon_drops") val uncommonDrops: List<NeuInternalName>,
-    @Expose @SerializedName("enchanted_books") val enchantedBooks: List<NeuInternalName>,
-    @Expose val boosters: List<NeuInternalName>,
-    @Expose val shards: List<NeuInternalName>,
-    @Expose val mobs: List<String>,
-    @Expose val runes: List<NeuInternalName>,
-    @Expose @SerializedName("misc_drops") val miscDrops: List<NeuInternalName>,
+    @SerialName("uncommon_drops") val uncommonDrops: List<NeuInternalName>,
+    @SerialName("enchanted_books") val enchantedBooks: List<NeuInternalName>,
+    val boosters: List<NeuInternalName>,
+    val shards: List<NeuInternalName>,
+    val mobs: List<String>,
+    val runes: List<NeuInternalName>,
+    @SerialName("misc_drops") val miscDrops: List<NeuInternalName>,
 )

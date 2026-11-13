@@ -5,45 +5,43 @@ import at.hannibal2.skyhanni.data.jsonobjects.other.NeuNbtInfoJson
 import at.hannibal2.skyhanni.data.jsonobjects.repo.neu.recipe.NeuAbstractRecipe
 import at.hannibal2.skyhanni.data.jsonobjects.repo.neu.recipe.NeuCraftingRecipeJson
 import at.hannibal2.skyhanni.test.command.ErrorManager
-import at.hannibal2.skyhanni.utils.KSerializable
 import at.hannibal2.skyhanni.utils.NeuInternalName
 import at.hannibal2.skyhanni.utils.json.fromJson
-import com.google.gson.JsonObject
-import com.google.gson.annotations.Expose
-import com.google.gson.annotations.SerializedName
-import com.google.gson.internal.LinkedTreeMap
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.nbt.NbtAccounter
 import net.minecraft.nbt.NbtIo
 import java.io.ByteArrayInputStream
 import java.util.Base64
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.JsonElement
+import kotlinx.serialization.json.JsonPrimitive
 
-@KSerializable
+@Serializable
 data class NeuItemJson(
-    @Expose @SerializedName("itemid") var itemId: String,
-    @Expose @SerializedName("displayname") val displayName: String? = null,
+    @SerialName("itemid") var itemId: String,
+    @SerialName("displayname") val displayName: String? = null,
     /**
      * From the NEU repo, this can be either a JSON object, or an NBT tag string.
      * We have to accept any from 'nbttag' since we don't have a type guarantee,
      * and perform further conversion ourselves. Don't use this field.
      */
-    @Expose
     @Deprecated("Use neuNbt or nbtTag instead", ReplaceWith("neuNbt or nbtTag"))
-    @SerializedName("nbttag")
-    private val nbtTagAny: Any,
-    @Expose val damage: Int? = null,
-    @Expose val lore: List<String> = emptyList(),
-    @Expose @SerializedName("internalname") val internalName: NeuInternalName,
-    @Expose @SerializedName("crafttext") val craftText: String? = null,
-    @Expose @SerializedName("useneucraft") val useNeuCraft: Boolean = false,
-    @Expose @SerializedName("clickcommand") val clickCommand: String? = null,
-    @Expose @SerializedName("modver") val modVersion: String? = null,
-    @Expose val vanilla: Boolean = false,
-    @Expose val infoType: String? = null,
-    @Expose val info: List<String> = emptyList(),
-    @Expose val recipe: NeuCraftingRecipeJson? = null,
-    @Expose val recipes: List<NeuAbstractRecipe> = emptyList(),
-    @Expose val count: Int? = null,
+    @SerialName("nbttag")
+    private val nbtTagAny: JsonElement,
+    val damage: Int? = null,
+    val lore: List<String> = emptyList(),
+    @SerialName("internalname") val internalName: NeuInternalName,
+    @SerialName("crafttext") val craftText: String? = null,
+    @SerialName("useneucraft") val useNeuCraft: Boolean = false,
+    @SerialName("clickcommand") val clickCommand: String? = null,
+    @SerialName("modver") val modVersion: String? = null,
+    val vanilla: Boolean = false,
+    val infoType: String? = null,
+    val info: List<String> = emptyList(),
+    val recipe: NeuCraftingRecipeJson? = null,
+    val recipes: List<NeuAbstractRecipe> = emptyList(),
+    val count: Int? = null,
 ) {
     companion object {
         private val nbtListRegex = Regex("([\\[,])\\d+:")
@@ -51,13 +49,9 @@ data class NeuItemJson(
 
     private val fixedNbtTagString by lazy {
         @Suppress("DEPRECATION")
-        when (nbtTagAny) {
-            is String -> nbtTagAny
-            is JsonObject -> nbtTagAny["nbttag"]?.asString.orEmpty()
-            is LinkedTreeMap<*, *> -> ConfigManager.gson.toJson(nbtTagAny)
-            else -> throw IllegalArgumentException(
-                "nbtTagAny must be [String|JsonObject|LinkedTreeMap], was: ${nbtTagAny::class.simpleName}",
-            )
+        when (val tag = nbtTagAny) {
+            is JsonPrimitive -> tag.content
+            else -> tag.toString()
         }
     }
 

@@ -1,13 +1,15 @@
 package at.hannibal2.skyhanni.data.jsonobjects.repo
 
 import at.hannibal2.skyhanni.utils.NeuInternalName
-import com.google.gson.annotations.Expose
-import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class PetsJson(
-    @Expose val skins: PetsJsonSkins,
+    val skins: PetsJsonSkins,
 )
 
+@Serializable
 data class PetsJsonSkins(
-    @Expose @SerializedName("game_variants") val gameVariants: Map<String, Set<NeuInternalName>>,
+    @SerialName("game_variants") val gameVariants: Map<String, Set<NeuInternalName>>,
 )

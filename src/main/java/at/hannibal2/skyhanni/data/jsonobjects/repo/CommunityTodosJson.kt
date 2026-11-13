@@ -1,15 +1,17 @@
 package at.hannibal2.skyhanni.data.jsonobjects.repo
 
-import com.google.gson.annotations.Expose
-import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class CommunityTodosJson(
-    @Expose @SerializedName("community_todos") val communityTodos: List<CommunityTodo>,
+    @SerialName("community_todos") val communityTodos: List<CommunityTodo>,
 )
 
+@Serializable
 data class CommunityTodo(
-    @Expose val id: String,
-    @Expose val author: String,
-    @Expose @SerializedName("discord_thread") val discordThread: String,
-    @Expose @SerializedName("todo_data") val todoData: String,
+    val id: String,
+    val author: String,
+    @SerialName("discord_thread") val discordThread: String,
+    @SerialName("todo_data") val todoData: String,
 )

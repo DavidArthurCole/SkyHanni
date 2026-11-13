@@ -1,6 +1,7 @@
 package at.hannibal2.skyhanni.utils
 
 import at.hannibal2.skyhanni.SkyHanniMod
+import at.hannibal2.skyhanni.utils.json.SimpleTimeMarkSerializer
 import java.time.Instant
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -10,8 +11,10 @@ import java.time.format.DateTimeFormatter
 import kotlin.math.abs
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.milliseconds
+import kotlinx.serialization.Serializable
 import kotlin.time.Instant as KInstant
 
+@Serializable(with = SimpleTimeMarkSerializer::class)
 @JvmInline
 value class SimpleTimeMark(private val millis: Long) : Comparable<SimpleTimeMark> {
 

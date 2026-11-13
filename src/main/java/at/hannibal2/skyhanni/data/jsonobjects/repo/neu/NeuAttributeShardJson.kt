@@ -2,22 +2,24 @@ package at.hannibal2.skyhanni.data.jsonobjects.repo.neu
 
 import at.hannibal2.skyhanni.utils.LorenzRarity
 import at.hannibal2.skyhanni.utils.NeuInternalName
-import com.google.gson.annotations.Expose
-import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class NeuAttributeShardJson(
-    @Expose @SerializedName("attribute_levelling") val attributeLevelling: Map<LorenzRarity, List<Int>>,
-    @Expose @SerializedName("unconsumable_attributes") val unconsumableAttributes: List<String>,
-    @Expose val attributes: List<NeuAttributeShardData>,
+    @SerialName("attribute_levelling") val attributeLevelling: Map<LorenzRarity, List<Int>>,
+    @SerialName("unconsumable_attributes") val unconsumableAttributes: List<String>,
+    val attributes: List<NeuAttributeShardData>,
 )
 
+@Serializable
 data class NeuAttributeShardData(
-    @Expose val bazaarName: NeuInternalName,
-    @Expose val displayName: String,
-    @Expose val rarity: LorenzRarity,
-    @Expose val internalName: NeuInternalName,
-    @Expose val abilityName: String = "",
-    @Expose val family: List<String>,
-    @Expose val alignment: String,
-    @Expose val shardId: String,
+    val bazaarName: NeuInternalName,
+    val displayName: String,
+    val rarity: LorenzRarity,
+    val internalName: NeuInternalName,
+    val abilityName: String = "",
+    val family: List<String> = emptyList(),
+    val alignment: String,
+    val shardId: String,
 )

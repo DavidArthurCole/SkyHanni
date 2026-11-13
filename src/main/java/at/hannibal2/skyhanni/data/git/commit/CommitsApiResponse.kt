@@ -1,10 +1,9 @@
 package at.hannibal2.skyhanni.data.git.commit
 
-import at.hannibal2.skyhanni.utils.KSerializable
-import com.google.gson.annotations.Expose
+import kotlinx.serialization.Serializable
 
-@KSerializable
+@Serializable
 data class CommitsApiResponse(
-    @Expose val sha: String,
-    @Expose val commit: Commit,
+    val sha: String,
+    val commit: Commit,
 )

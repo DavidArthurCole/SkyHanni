@@ -33,6 +33,7 @@ import at.hannibal2.skyhanni.utils.TimeUtils.yearFormatter
 import at.hannibal2.skyhanni.utils.TimeUtils.yearToLocalDate
 import at.hannibal2.skyhanni.utils.collection.CollectionUtils.addAll
 import at.hannibal2.skyhanni.utils.compat.MinecraftCompat
+import at.hannibal2.skyhanni.utils.json.TrackerDisplayModeSerializer
 import at.hannibal2.skyhanni.utils.renderables.Renderable
 import at.hannibal2.skyhanni.utils.renderables.RenderableUtils.addRenderableNullableButton
 import at.hannibal2.skyhanni.utils.renderables.SearchTextInput
@@ -48,6 +49,7 @@ import java.time.LocalDate
 import kotlin.reflect.KClass
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
+import kotlinx.serialization.Serializable
 
 @Suppress("TooManyFunctions")
 open class SkyHanniTracker<Data : TrackerData<*>, Config : GenericIndividualTrackerConfig<*>>(
@@ -435,6 +437,7 @@ open class SkyHanniTracker<Data : TrackerData<*>, Config : GenericIndividualTrac
     }
 
     // False positive
+    @Serializable(with = TrackerDisplayModeSerializer::class)
     @Suppress("unused")
     enum class DefaultDisplayMode(val display: String, val mode: DisplayMode?) {
         TOTAL("Total", DisplayMode.TOTAL),

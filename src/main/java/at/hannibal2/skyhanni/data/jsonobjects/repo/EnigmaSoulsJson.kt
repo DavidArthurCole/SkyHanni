@@ -1,13 +1,15 @@
 package at.hannibal2.skyhanni.data.jsonobjects.repo
 
 import at.hannibal2.skyhanni.utils.LorenzVec
-import com.google.gson.annotations.Expose
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class EnigmaSoulsJson(
-    @Expose val areas: Map<String, List<EnigmaPosition>>,
+    val areas: Map<String, List<EnigmaPosition>>,
 )
 
+@Serializable
 data class EnigmaPosition(
-    @Expose val name: String,
-    @Expose val position: LorenzVec,
+    val name: String,
+    val position: LorenzVec,
 )

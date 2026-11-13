@@ -1,47 +1,49 @@
 package at.hannibal2.skyhanni.data.jsonobjects.elitedev
 
-import at.hannibal2.skyhanni.utils.KSerializable
 import at.hannibal2.skyhanni.utils.LorenzRarity
 import at.hannibal2.skyhanni.utils.NeuInternalName
-import com.google.gson.annotations.Expose
+import kotlinx.serialization.Serializable
 
-@KSerializable
+@Serializable
 data class EliteAuctionsResponse(
-    @Expose val items: Map<NeuInternalName, List<EliteAuctionItem>>,
+    val items: Map<NeuInternalName, List<EliteAuctionItem>>,
 )
 
+@Serializable
 data class EliteLowestSet(
-    @Expose val lowest: Long,
-    @Expose val lowestVolume: Int,
+    val lowest: Long,
+    val lowestVolume: Int,
 )
 
+@Serializable
 data class EliteVariedBy(
-    @Expose val rarity: LorenzRarity,
-    @Expose val pet: String? = null,
-    @Expose val petLevel: EliteVariedByPetLevel? = null,
-    @Expose val extra: Map<String, String>? = null,
+    val rarity: LorenzRarity,
+    val pet: String? = null,
+    val petLevel: EliteVariedByPetLevel? = null,
+    val extra: Map<String, String>? = null,
 )
 
+@Serializable
 data class EliteVariedByPetLevel(
-    @Expose val key: String,
-    @Expose val min: Int,
-    @Expose val max: Int,
+    val key: String,
+    val min: Int,
+    val max: Int,
 )
 
-@KSerializable
+@Serializable
 data class EliteAuctionItem(
-    @Expose private val skyblockId: NeuInternalName,
-    @Expose val variantKey: String,
-    @Expose val variedBy: EliteVariedBy,
-    @Expose private val lowest: Long,
-    @Expose private val lowestVolume: Int,
-    @Expose private val lowest3Day: Long,
-    @Expose private val lowest3DayVolume: Int,
-    @Expose private val lowest7Day: Long,
-    @Expose private val lowest7DayVolume: Int,
+    private val skyblockId: NeuInternalName,
+    val variantKey: String,
+    val variedBy: EliteVariedBy,
+    private val lowest: Long,
+    private val lowestVolume: Int,
+    private val lowest3Day: Long,
+    private val lowest3DayVolume: Int,
+    private val lowest7Day: Long,
+    private val lowest7DayVolume: Int,
 ) {
-    val internalName: NeuInternalName = skyblockId
-    val lowestSet: EliteLowestSet = EliteLowestSet(lowest, lowestVolume)
-    val lowest3DaySet: EliteLowestSet = EliteLowestSet(lowest3Day, lowest3DayVolume)
-    val lowest7DaySet: EliteLowestSet = EliteLowestSet(lowest7Day, lowest7DayVolume)
+    val internalName: NeuInternalName get() = skyblockId
+    val lowestSet: EliteLowestSet get() = EliteLowestSet(lowest, lowestVolume)
+    val lowest3DaySet: EliteLowestSet get() = EliteLowestSet(lowest3Day, lowest3DayVolume)
+    val lowest7DaySet: EliteLowestSet get() = EliteLowestSet(lowest7Day, lowest7DayVolume)
 }

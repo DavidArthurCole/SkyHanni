@@ -11,6 +11,7 @@ import at.hannibal2.skyhanni.events.render.gui.GuiScreenOpenEvent
 import at.hannibal2.skyhanni.skyhannimodule.SkyHanniModule
 import at.hannibal2.skyhanni.test.command.ErrorManager
 import at.hannibal2.skyhanni.utils.ChatUtils
+import at.hannibal2.skyhanni.utils.json.JsonTreeBridge.toGson
 import at.hannibal2.skyhanni.utils.json.Shimmy
 import at.hannibal2.skyhanni.utils.system.PlatformUtils
 import kotlin.time.Duration.Companion.INFINITE
@@ -75,10 +76,8 @@ object EnforcedConfigValues {
             } catch (_: Exception) {
                 continue
             }
-            val currentValue = shimmy.getJson()
-            if (currentValue != enforcedValue.value) {
-                shimmy.setJson(enforcedValue.value)
-            }
+            val enforced = enforcedValue.value.toGson()
+            if (shimmy.getJson() != enforced) shimmy.setJson(enforced)
         }
     }
 

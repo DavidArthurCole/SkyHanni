@@ -1,19 +1,22 @@
 package at.hannibal2.skyhanni.data.jsonobjects.repo
 
 import at.hannibal2.skyhanni.data.IslandType
-import com.google.gson.annotations.Expose
-import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.JsonNames
 
+@Serializable
 data class WarpsJson(
-    @Expose @SerializedName(value = "warp_commands", alternate = ["warpCommands"]) val warpCommands: List<String>,
-    @Expose @SerializedName(value = "warp_location", alternate = ["warpLocation"]) val warpLocation: Map<String, WarpLocationData>,
+    @SerialName("warp_commands") @JsonNames("warpCommands") val warpCommands: List<String>,
+    @SerialName("warp_location") @JsonNames("warpLocation") val warpLocation: Map<String, WarpLocationData>,
 )
 
+@Serializable
 data class WarpLocationData(
-    @Expose @SerializedName("display_name") val displayName: String,
-    @Expose val island: IslandType,
-    @Expose val x: Double,
-    @Expose val y: Double,
-    @Expose val z: Double,
-    @Expose @SerializedName("extra_diana_warp_blocks") val extraDianaWarpBlocks: Int,
+    @SerialName("display_name") val displayName: String,
+    val island: IslandType,
+    val x: Double,
+    val y: Double,
+    val z: Double,
+    @SerialName("extra_diana_warp_blocks") val extraDianaWarpBlocks: Int = 0,
 )

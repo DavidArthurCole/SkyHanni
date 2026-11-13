@@ -1,13 +1,15 @@
 package at.hannibal2.skyhanni.data.jsonobjects.repo
 
-import com.google.gson.annotations.Expose
-import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class AnitaUpgradeCostsJson(
-    @Expose @SerializedName("level_price") val levelPrice: Map<Int, AnitaUpgradePrice>,
+    @SerialName("level_price") val levelPrice: Map<Int, AnitaUpgradePrice>,
 )
 
+@Serializable
 data class AnitaUpgradePrice(
-    @Expose @SerializedName("gold_medals") val goldMedals: Int,
-    @Expose @SerializedName("jacob_tickets") val jacobTickets: Int,
+    @SerialName("gold_medals") val goldMedals: Int,
+    @SerialName("jacob_tickets") val jacobTickets: Int,
 )

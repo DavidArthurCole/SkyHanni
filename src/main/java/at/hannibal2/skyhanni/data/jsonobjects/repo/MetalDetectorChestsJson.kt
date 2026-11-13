@@ -1,8 +1,9 @@
 package at.hannibal2.skyhanni.data.jsonobjects.repo
 
 import at.hannibal2.skyhanni.utils.LorenzVec
-import com.google.gson.annotations.Expose
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class MetalDetectorChestsJson(
-    @Expose val locations: List<LorenzVec>,
+    val locations: List<LorenzVec>,
 )

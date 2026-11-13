@@ -41,12 +41,16 @@ sealed interface RepoFileSystem {
      * On failure, calls [pathDiagnostics] to surface OS-level context in the exception message,
      * so the root cause is visible without needing to inspect the stack trace.
      */
-    fun readJson(path: String): JsonElement {
+    fun readText(path: String): String {
         val bytes = readAllBytes(path)
         check(bytes.isNotEmpty()) {
             "Repo file '$path' is empty (0 bytes)\n${pathDiagnostics(path)}"
         }
-        val content = String(bytes, Charsets.UTF_8)
+        return String(bytes, Charsets.UTF_8)
+    }
+
+    fun readJson(path: String): JsonElement {
+        val content = readText(path)
         return ConfigManager.gson.fromJson(content, JsonElement::class.java) ?: throw IllegalStateException(
             "Repo file '$path' parsed as JSON null. File may contain only the literal 'null' or be malformed " +
                 "(${content.length} chars)\n${pathDiagnostics(path)}",

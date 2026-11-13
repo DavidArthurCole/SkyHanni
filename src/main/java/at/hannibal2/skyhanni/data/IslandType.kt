@@ -9,8 +9,11 @@ import at.hannibal2.skyhanni.utils.LocationUtils.isInside
 import at.hannibal2.skyhanni.utils.LorenzVec
 import at.hannibal2.skyhanni.utils.SkyBlockUtils
 import at.hannibal2.skyhanni.utils.coroutines.CoroutineSettings
+import at.hannibal2.skyhanni.utils.json.IslandTypeSerializer
 import net.minecraft.world.phys.AABB
+import kotlinx.serialization.Serializable
 
+@Serializable(with = IslandTypeSerializer::class)
 enum class IslandType(private val nameFallback: String, private val apiNameFallback: String?) {
     // General
     PRIVATE_ISLAND("Private Island", "dynamic"),

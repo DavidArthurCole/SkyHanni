@@ -1,10 +1,19 @@
 package at.hannibal2.skyhanni.utils.tracker
 
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
+
+@Serializable
 sealed class SessionUptime {
-    data class Normal(val sessionType: NormalSession) : SessionUptime() {
+    @Serializable
+    @SerialName("normal")
+    data class Normal(@SerialName("session") val sessionType: NormalSession) : SessionUptime() {
         override fun toString(): String = sessionType.toString()
     }
-    data class Garden(val sessionType: GardenSession) : SessionUptime() {
+
+    @Serializable
+    @SerialName("garden")
+    data class Garden(@SerialName("session") val sessionType: GardenSession) : SessionUptime() {
         override fun toString(): String = sessionType.toString()
     }
 

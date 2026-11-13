@@ -1,42 +1,34 @@
 package at.hannibal2.skyhanni.data.model.waypoints
 
-import at.hannibal2.skyhanni.config.ConfigManager
 import at.hannibal2.skyhanni.utils.ChatUtils
 import at.hannibal2.skyhanni.utils.LorenzVec
+import at.hannibal2.skyhanni.utils.json.SkyHanniJson
+import at.hannibal2.skyhanni.utils.json.WholeNumberSerializer
 import com.google.auto.service.AutoService
-import com.google.gson.annotations.Expose
-import com.google.gson.reflect.TypeToken
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.builtins.ListSerializer
 
 @AutoService(WaypointFormat::class)
 class ColeweightWaypointFormat : WaypointFormat {
 
+    @Serializable
     data class ColeweightWaypoint(
-        @Expose
-        val x: Int,
-        @Expose
-        val y: Int,
-        @Expose
-        val z: Int,
-        @Expose
+        @Serializable(with = WholeNumberSerializer::class) val x: Int,
+        @Serializable(with = WholeNumberSerializer::class) val y: Int,
+        @Serializable(with = WholeNumberSerializer::class) val z: Int,
         val r: Double,
-        @Expose
         val g: Double,
-        @Expose
         val b: Double,
-        @Expose
         val options: MutableMap<String, String> = mutableMapOf(),
     ) : Copyable<ColeweightWaypoint> {
         override fun copy() = ColeweightWaypoint(x, y, z, r, g, b, options)
     }
 
-    override fun load(string: String): Waypoints<SkyHanniWaypoint>? {
-        val type = object : TypeToken<Waypoints<ColeweightWaypoint>>() {}.type
-        return try {
-            ConfigManager.gson.fromJson<Waypoints<ColeweightWaypoint>>(string, type).transform { it.load() }
-        } catch (e: Exception) {
-            ChatUtils.debug(e.stackTraceToString())
-            null
-        }
+    override fun load(string: String): Waypoints<SkyHanniWaypoint>? = try {
+        Waypoints(SkyHanniJson.json.decodeFromString(listSerializer, string).toMutableList()).transform { it.load() }
+    } catch (e: Exception) {
+        ChatUtils.debug(e.stackTraceToString())
+        null
     }
 
     private fun ColeweightWaypoint.load() = SkyHanniWaypoint(
@@ -51,9 +43,8 @@ class ColeweightWaypointFormat : WaypointFormat {
         return load(string) != null
     }
 
-    override fun export(waypoints: Waypoints<SkyHanniWaypoint>): String {
-        return ConfigManager.gson.toJson(waypoints.transform { it.export() }, Waypoints<ColeweightWaypoint>()::class.java)
-    }
+    override fun export(waypoints: Waypoints<SkyHanniWaypoint>): String =
+        SkyHanniJson.json.encodeToString(listSerializer, waypoints.transform { it.export() }.waypoints)
 
     private fun SkyHanniWaypoint.export(): ColeweightWaypoint = with(location) {
         ColeweightWaypoint(
@@ -68,4 +59,8 @@ class ColeweightWaypointFormat : WaypointFormat {
     }
 
     override val name: String get() = "coleweight"
+
+    private companion object {
+        val listSerializer = ListSerializer(ColeweightWaypoint.serializer())
+    }
 }

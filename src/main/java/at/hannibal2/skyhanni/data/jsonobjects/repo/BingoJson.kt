@@ -1,15 +1,17 @@
 package at.hannibal2.skyhanni.data.jsonobjects.repo
 
-import com.google.gson.annotations.Expose
-import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class BingoJson(
-    @Expose @SerializedName("bingo_tips") val bingoTips: Map<String, BingoData>,
+    @SerialName("bingo_tips") val bingoTips: Map<String, BingoData>,
 )
 
+@Serializable
 data class BingoData(
-    @Expose val difficulty: String,
-    @Expose val note: List<String>,
-    @Expose val guide: List<String>,
-    @Expose val found: String?,
+    val difficulty: String,
+    val note: List<String>,
+    val guide: List<String>,
+    val found: String?,
 )

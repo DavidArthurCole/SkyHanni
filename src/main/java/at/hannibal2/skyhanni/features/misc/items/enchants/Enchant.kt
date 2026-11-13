@@ -16,30 +16,27 @@ import at.hannibal2.skyhanni.utils.StringUtils.insert
 import at.hannibal2.skyhanni.utils.StringUtils.splitCamelCase
 import at.hannibal2.skyhanni.utils.compat.getDoubleOrDefault
 import at.hannibal2.skyhanni.utils.compat.withColor
-import com.google.gson.annotations.Expose
 import io.github.notenoughupdates.moulconfig.ChromaColour
 import io.github.notenoughupdates.moulconfig.observer.Property
 import net.minecraft.ChatFormatting
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.Style
 import net.minecraft.network.chat.TextColor
+import kotlinx.serialization.Serializable
 
 private val PROMISING_SHOVEL = "PROMISING_SHOVEL".toInternalName()
 private val STONK_PICKAXE = "STONK_PICKAXE".toInternalName()
 
+@Serializable
 open class Enchant : Comparable<Enchant> {
 
     // TODO move this away. split json data from logic
-    @Expose
     var nbtName = ""
 
-    @Expose
     var loreName = ""
 
-    @Expose
     private val goodLevel = 0
 
-    @Expose
     private val maxLevel = 0
 
     private fun isNormal() = this is Normal
@@ -137,8 +134,10 @@ open class Enchant : Comparable<Enchant> {
         return if (isUltimate()) -1 else 1
     }
 
+    @Serializable
     class Normal : Enchant()
 
+    @Serializable
     class Ultimate : Enchant() {
         override fun getStyle(level: Int, itemStack: SafeItemStack?): Style {
             return if (advanced.useAdvancedUltimateColor.get()) {
@@ -152,14 +151,12 @@ open class Enchant : Comparable<Enchant> {
         }
     }
 
+    @Serializable
     class Stacking : Enchant() {
-        @Expose
         val nbtNum: String = ""
 
-        @Expose
         private val statLabel: String = ""
 
-        @Expose
         val stackLevel: List<Int> = emptyList()
 
         override fun toString() = "$nbtNum $stackLevel ${super.toString()}"

@@ -1,19 +1,17 @@
 package at.hannibal2.skyhanni.features.misc.items.enchants
 
-import com.google.gson.annotations.Expose
-import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
+@Serializable
 class EnchantsJson {
-    @Expose
-    @SerializedName("NORMAL")
+    @SerialName("NORMAL")
     var normal: HashMap<String, Enchant.Normal> = hashMapOf()
 
-    @Expose
-    @SerializedName("ULTIMATE")
+    @SerialName("ULTIMATE")
     var ultimate: HashMap<String, Enchant.Ultimate> = hashMapOf()
 
-    @Expose
-    @SerializedName("STACKING")
+    @SerialName("STACKING")
     var stacking: HashMap<String, Enchant.Stacking> = hashMapOf()
 
     fun getFromLore(passedLoreName: String): Enchant {

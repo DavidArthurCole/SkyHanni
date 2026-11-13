@@ -1,6 +1,6 @@
 package at.hannibal2.skyhanni.utils.repopatterns
 
-import at.hannibal2.skyhanni.utils.KSerializable
+import kotlinx.serialization.Serializable
 
 /**
  * A class containing a dump of all regexes that are defined using [RepoPattern].
@@ -23,7 +23,7 @@ import at.hannibal2.skyhanni.utils.KSerializable
  * called `REPO_PAT`, which contains a [fine-grained personal access token](https://github.com/settings/personal-access-tokens/new)
  * with the owner of the live repo as resource owner, access to the live repo only, and Contents read and write.
  */
-@KSerializable
+@Serializable
 data class RepoPatternDump(
     val sourceLabel: String = "anonymous",
     val regexes: Map<String, String> = mapOf(),

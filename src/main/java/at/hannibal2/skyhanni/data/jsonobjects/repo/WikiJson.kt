@@ -1,14 +1,17 @@
 package at.hannibal2.skyhanni.data.jsonobjects.repo
 
-import com.google.gson.annotations.Expose
-import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.JsonNames
 
+@Serializable
 data class WikiJson(
-    @Expose val unofficial: Wiki,
+    val unofficial: Wiki,
 )
 
+@Serializable
 data class Wiki(
-    @Expose val name: String,
-    @Expose @SerializedName(value = "url_prefix", alternate = ["urlPrefix"]) val urlPrefix: String,
-    @Expose @SerializedName(value = "full_search_prefix", alternate = ["fullSearchPrefix"]) val fullSearchPrefix: String,
+    val name: String,
+    @SerialName("url_prefix") @JsonNames("urlPrefix") val urlPrefix: String,
+    @SerialName("full_search_prefix") @JsonNames("fullSearchPrefix") val fullSearchPrefix: String,
 )

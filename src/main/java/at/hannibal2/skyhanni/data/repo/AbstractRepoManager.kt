@@ -16,6 +16,7 @@ import at.hannibal2.skyhanni.utils.chat.TextHelper
 import at.hannibal2.skyhanni.utils.chat.TextHelper.asComponent
 import at.hannibal2.skyhanni.utils.chat.TextHelper.send
 import at.hannibal2.skyhanni.utils.coroutines.CoroutineSettings
+import at.hannibal2.skyhanni.utils.json.SkyHanniJson
 import at.hannibal2.skyhanni.utils.json.fromJson
 import at.hannibal2.skyhanni.utils.json.getJson
 import at.hannibal2.skyhanni.utils.system.LazyVar
@@ -192,6 +193,12 @@ abstract class AbstractRepoManager<E : AbstractRepoReloadEvent> {
     internal fun resolvePath(dir: String, name: String) = "$dir/$name.json"
 
     @PublishedApi
+    internal fun readText(path: String): String? {
+        if (repoFileSystem.exists(path)) return repoFileSystem.readText(path)
+        return repoDirectory.resolve(path).takeIf { it.isFile }?.readText()
+    }
+
+    @PublishedApi
     internal fun readJsonElement(path: String): JsonElement? {
         if (repoFileSystem.exists(path)) return repoFileSystem.readJson(path)
         val fallback = repoDirectory.resolve(path)
@@ -214,9 +221,9 @@ abstract class AbstractRepoManager<E : AbstractRepoReloadEvent> {
         gson: Gson = ConfigManager.gson,
     ): T = runCatching {
         val path = resolvePath(directory, fileName)
-        val json = readJsonElement(path) ?: logger.throwError("Repo file '$fileName' not found.")
         withContext(Dispatchers.Default) {
-            gson.fromJson<T>(json)
+            SkyHanniJson.decodeOrNull<T> { readText(path) ?: logger.throwError("Repo file '$fileName' not found.") }
+                ?: gson.fromJson<T>(readJsonElement(path) ?: logger.throwError("Repo file '$fileName' not found."))
         }
     }.getOrElse { e ->
         logger.throwErrorWithCause("Repo parsing error while trying to read constant '$fileName'", e)

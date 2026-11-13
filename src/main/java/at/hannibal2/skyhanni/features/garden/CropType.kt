@@ -6,10 +6,13 @@ import at.hannibal2.skyhanni.utils.LorenzColor
 import at.hannibal2.skyhanni.utils.LorenzVec
 import at.hannibal2.skyhanni.utils.SafeItemStack
 import at.hannibal2.skyhanni.utils.compat.MinecraftCompat
+import at.hannibal2.skyhanni.utils.json.CropTypeSerializer
 import net.minecraft.world.item.Items
 import net.minecraft.world.level.block.Blocks
 import net.minecraft.world.level.block.state.BlockState
+import kotlinx.serialization.Serializable
 
+@Serializable(with = CropTypeSerializer::class)
 enum class CropType(
     val cropName: String,
     val toolName: String,

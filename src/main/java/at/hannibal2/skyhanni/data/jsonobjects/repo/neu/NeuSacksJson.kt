@@ -1,13 +1,15 @@
 package at.hannibal2.skyhanni.data.jsonobjects.repo.neu
 
 import at.hannibal2.skyhanni.utils.NeuInternalName
-import com.google.gson.annotations.Expose
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class NeuSacksJson(
-    @Expose val sacks: Map<String, SackInfo>,
+    val sacks: Map<String, SackInfo>,
 )
 
+@Serializable
 data class SackInfo(
-    @Expose val item: NeuInternalName,
-    @Expose val contents: List<NeuInternalName>,
+    val item: NeuInternalName,
+    val contents: List<NeuInternalName>,
 )

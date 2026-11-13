@@ -1,16 +1,19 @@
 package at.hannibal2.skyhanni.data.jsonobjects.repo
 
 import at.hannibal2.skyhanni.utils.LorenzVec
-import com.google.gson.annotations.Expose
-import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.JsonNames
 
+@Serializable
 data class LocationFixJson(
-    @Expose @SerializedName(value = "location_fixes", alternate = ["locationFixes"]) val locationFixes: Map<String, LocationFix>,
+    @SerialName("location_fixes") @JsonNames("locationFixes") val locationFixes: Map<String, LocationFix>,
 )
 
+@Serializable
 data class LocationFix(
-    @Expose val a: LorenzVec,
-    @Expose val b: LorenzVec,
-    @Expose @SerializedName("island_name") val islandName: String,
-    @Expose @SerializedName("real_location") val realLocation: String,
+    val a: LorenzVec,
+    val b: LorenzVec,
+    @SerialName("island_name") val islandName: String,
+    @SerialName("real_location") val realLocation: String,
 )

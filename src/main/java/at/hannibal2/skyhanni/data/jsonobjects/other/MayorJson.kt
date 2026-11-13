@@ -1,42 +1,48 @@
 package at.hannibal2.skyhanni.data.jsonobjects.other
 
-import com.google.gson.annotations.Expose
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class MayorJson(
-    @Expose val mayor: MayorInfo?,
-    @Expose val current: MayorElection?,
+    val mayor: MayorInfo?,
+    val current: MayorElection?,
 )
 
+@Serializable
 data class MayorInfo(
-    @Expose val key: String,
-    @Expose val name: String,
-    @Expose val perks: List<MayorPerk>?,
+    val key: String,
+    val name: String,
+    val perks: List<MayorPerk>?,
     // Ministers won't exist,
     // when the current mayor is a special mayor
-    @Expose val minister: Minister?,
-    @Expose val election: MayorElection?,
+    val minister: Minister?,
+    val election: MayorElection?,
 )
 
+@Serializable
 data class MayorElection(
-    @Expose val year: Int,
-    @Expose val candidates: List<MayorCandidate>,
+    val year: Int,
+    val candidates: List<MayorCandidate>,
 )
 
+@Serializable
 data class MayorCandidate(
-    @Expose val key: String,
-    @Expose val name: String,
-    @Expose val perks: List<MayorPerk>?,
-    @Expose val votes: Int,
+    val key: String,
+    val name: String,
+    val perks: List<MayorPerk>?,
+    val votes: Int,
 )
 
+@Serializable
 data class Minister(
-    @Expose val key: String,
-    @Expose val name: String,
-    @Expose val perk: MayorPerk?,
+    val key: String,
+    val name: String,
+    val perk: MayorPerk?,
 )
 
+@Serializable
 data class MayorPerk(
-    @Expose val name: String,
-    @Expose val description: String,
-    @Expose val minister: Boolean = false,
+    val name: String,
+    val description: String,
+    val minister: Boolean = false,
 )

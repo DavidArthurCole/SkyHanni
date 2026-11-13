@@ -1,42 +1,69 @@
 package at.hannibal2.skyhanni.data.jsonobjects.other
 
-import com.google.gson.annotations.Expose
-import com.google.gson.annotations.SerializedName
+import at.hannibal2.skyhanni.utils.json.JsonTreeSerializer
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.JsonElement
+import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.JsonPrimitive
+import kotlinx.serialization.json.intOrNull
+import kotlinx.serialization.json.jsonObject
 
+@Serializable
 data class HypixelPlayerApiJson(
-    @Expose val profiles: List<HypixelApiProfile>,
+    val profiles: List<HypixelApiProfile>,
 )
 
+@Serializable
 data class HypixelApiProfile(
-    @Expose val members: Map<String, HypixelApiPlayer>,
-    @Expose @SerializedName("cute_name") val profileName: String,
+    val members: Map<String, HypixelApiPlayer> = emptyMap(),
+    @SerialName("cute_name") val profileName: String = "",
 )
 
+@Serializable
 data class HypixelApiPlayer(
-    @Expose @SerializedName("trophy_fish") val trophyFish: HypixelApiTrophyFish,
-    @Expose val events: HypixelApiEvents,
-    @Expose @SerializedName("nether_island_player_data") val netherData: HypixelApiFactionInfo,
+    @SerialName("trophy_fish") val trophyFish: HypixelApiTrophyFish? = null,
+    val events: HypixelApiEvents? = null,
+    @SerialName("nether_island_player_data") val netherData: HypixelApiFactionInfo? = null,
 )
 
+@Serializable
 data class HypixelApiEvents(
-    @Expose val easter: HypixelApiEasterEvent,
+    val easter: HypixelApiEasterEvent? = null,
 )
 
+@Serializable
 data class HypixelApiEasterEvent(
-    @Expose val rabbits: HypixelApiRabbits,
+    val rabbits: HypixelApiRabbits? = null,
 )
 
+@Serializable
 data class HypixelApiRabbits(
-    @Expose @SerializedName("collected_locations") val collectedLocations: Map<String, List<String>>,
+    @SerialName("collected_locations") val collectedLocations: Map<String, List<String>>? = null,
 )
 
+@Serializable(with = HypixelApiTrophyFishSerializer::class)
 data class HypixelApiTrophyFish(
     val totalCaught: Int,
     val caught: Map<String, Int>,
 )
 
+object HypixelApiTrophyFishSerializer : JsonTreeSerializer<HypixelApiTrophyFish>("HypixelApiTrophyFish") {
+    private const val TOTAL_KEY = "total_caught"
+
+    override fun toTree(value: HypixelApiTrophyFish): JsonElement = JsonObject(emptyMap())
+
+    override fun fromTree(element: JsonElement): HypixelApiTrophyFish {
+        val counts = element.jsonObject.mapNotNull { (name, value) ->
+            (value as? JsonPrimitive)?.takeUnless { it.isString }?.intOrNull?.let { name to it }
+        }.toMap()
+        return HypixelApiTrophyFish(counts[TOTAL_KEY] ?: 0, counts - TOTAL_KEY)
+    }
+}
+
+@Serializable
 data class HypixelApiFactionInfo(
-    @Expose @SerializedName("barbarians_reputation") val barbarianReputation: Int,
-    @Expose @SerializedName("mages_reputation") val mageReputation: Int,
-    @Expose @SerializedName("selected_faction") val currentFaction: String?,
+    @SerialName("barbarians_reputation") val barbarianReputation: Int = 0,
+    @SerialName("mages_reputation") val mageReputation: Int = 0,
+    @SerialName("selected_faction") val currentFaction: String? = null,
 )

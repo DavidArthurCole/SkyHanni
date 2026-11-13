@@ -3,7 +3,6 @@ package at.hannibal2.skyhanni.data
 import at.hannibal2.skyhanni.data.jsonobjects.repo.neu.AnimatedSkinJson
 import at.hannibal2.skyhanni.utils.ItemUtils
 import at.hannibal2.skyhanni.utils.ItemUtils.getItemRarityOrNull
-import at.hannibal2.skyhanni.utils.KSerializable
 import at.hannibal2.skyhanni.utils.LorenzRarity
 import at.hannibal2.skyhanni.utils.NeuInternalName
 import at.hannibal2.skyhanni.utils.NeuInternalName.Companion.toInternalName
@@ -14,10 +13,12 @@ import at.hannibal2.skyhanni.utils.PetUtils
 import at.hannibal2.skyhanni.utils.PetUtils.hasValidHigherTier
 import at.hannibal2.skyhanni.utils.SafeItemStack
 import at.hannibal2.skyhanni.utils.SkyBlockItemModifierUtils
+import at.hannibal2.skyhanni.utils.json.UuidSerializer
 import at.hannibal2.skyhanni.utils.renderables.animated.framed.ItemStackAnimatedFrame
 import com.google.gson.annotations.Expose
 import java.util.UUID
 import kotlin.math.roundToInt
+import kotlinx.serialization.Serializable
 
 data class PetDataStorage(
     @Expose val players: MutableMap<UUID, PlayerSpecific> = mutableMapOf(),
@@ -32,14 +33,14 @@ data class PetDataStorage(
     )
 }
 
-@KSerializable
+@Serializable
 data class PetData(
-    @Expose private val petInternalName: NeuInternalName, // The internal name of the pet, e.g., `RABBIT;5`
-    @Expose var skinInternalName: NeuInternalName? = null, // The skin of the pet, e.g., `PET_SKIN_WOLF_DOGE`
-    @Expose var skinVariantIndex: Int? = null, // Used for pet skins that have variants, otherwise unused
-    @Expose var heldItemInternalName: NeuInternalName? = null, // The held item of the pet, e.g., `PET_ITEM_COMBAT_SKILL_BOOST_EPIC`
-    @Expose var exp: Double? = null, // The total XP of the pet as a double, e.g., `0.0`
-    @Expose val uuid: UUID? = null, // If this data is for a 'real' pet, this is the UUID of it
+    private val petInternalName: NeuInternalName, // The internal name of the pet, e.g., `RABBIT;5`
+    var skinInternalName: NeuInternalName? = null, // The skin of the pet, e.g., `PET_SKIN_WOLF_DOGE`
+    var skinVariantIndex: Int? = null, // Used for pet skins that have variants, otherwise unused
+    var heldItemInternalName: NeuInternalName? = null, // The held item of the pet, e.g., `PET_ITEM_COMBAT_SKILL_BOOST_EPIC`
+    var exp: Double? = null, // The total XP of the pet as a double, e.g., `0.0`
+    @Serializable(with = UuidSerializer::class) val uuid: UUID? = null, // If this data is for a 'real' pet, this is the UUID of it
 ) {
     constructor(petInfo: SkyBlockItemModifierUtils.PetInfo) : this(
         petInfo.let { "${it.type};${it.tier.neuPetIndex}".toInternalName() },
@@ -51,8 +52,8 @@ data class PetData(
     )
 
     private val tierBoosted get() = heldItemInternalName == TIER_BOOST && petInternalName.hasValidHigherTier()
-    private val properPetName = PetUtils.getPetProperName(petInternalName)
-    private val specifiedRarity = PetUtils.getPetRarity(petInternalName) ?: LorenzRarity.COMMON
+    private val properPetName by lazy { PetUtils.getPetProperName(petInternalName) }
+    private val specifiedRarity by lazy { PetUtils.getPetRarity(petInternalName) ?: LorenzRarity.COMMON }
 
     /**
      * Interpolated version of internal name that actually represents the state of the pet.

@@ -1,15 +1,17 @@
 package at.hannibal2.skyhanni.data.jsonobjects.repo
 
-import com.google.gson.annotations.Expose
-import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class HoppityRabbitTexturesJson(
-    @Expose @SerializedName("textures") val textures: Map<String, List<HoppityRabbitTextureEntry>>,
+    @SerialName("textures") val textures: Map<String, List<HoppityRabbitTextureEntry>>,
 )
 
+@Serializable
 data class HoppityRabbitTextureEntry(
-    @Expose @SerializedName("rabbits") val rabbits: List<String>,
-    @Expose @SerializedName("texture_value_b64") val textureValueB64: String,
-    @Expose @SerializedName("skull_id") val skullId: String,
-    @Expose @SerializedName("texture_id") val textureId: String,
+    @SerialName("rabbits") val rabbits: List<String>,
+    @SerialName("texture_value_b64") val textureValueB64: String,
+    @SerialName("skull_id") val skullId: String,
+    @SerialName("texture_id") val textureId: String,
 )

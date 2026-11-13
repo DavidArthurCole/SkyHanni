@@ -2,20 +2,21 @@ package at.hannibal2.skyhanni.data.jsonobjects.repo.neu.recipe
 
 import at.hannibal2.skyhanni.data.jsonobjects.repo.neu.NeuItemJson
 import at.hannibal2.skyhanni.utils.PrimitiveIngredient
-import com.google.gson.annotations.Expose
-import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class NeuMobDropsRecipeJson(
-    @Expose override val type: NeuRecipeType = NeuRecipeType.MOB_DROP,
-    @Expose val name: String,
-    @Expose val render: String? = null,
-    @Expose val panorama: String? = null,
-    @Expose val level: Int,
-    @Expose val coins: Int,
-    @Expose val xp: Int? = null,
-    @Expose @SerializedName("combat_xp") val combatXp: Int? = null,
-    @Expose val drops: List<NeuDropJson>,
-    @Expose val extra: List<String> = emptyList(),
+    override val type: NeuRecipeType = NeuRecipeType.MOB_DROP,
+    val name: String? = null,
+    val render: String? = null,
+    val panorama: String? = null,
+    val level: Int = 0,
+    val coins: Int = 0,
+    val xp: Int? = null,
+    @SerialName("combat_xp") val combatXp: Int? = null,
+    val drops: List<NeuDropJson>,
+    val extra: List<String> = emptyList(),
 ) : NeuAbstractRecipe() {
     override fun getPrimitiveInputs(itemJson: NeuItemJson) = listOf(
         PrimitiveIngredient(itemJson.internalName)
@@ -26,8 +27,9 @@ data class NeuMobDropsRecipeJson(
     }
 }
 
+@Serializable
 data class NeuDropJson(
-    @Expose val id: NeuRecipeComponent,
+    val id: NeuRecipeComponent,
     /**
      * Because of variability in formatting, this is a String.
      * Can be of the format(s);
@@ -35,6 +37,6 @@ data class NeuDropJson(
      * "0.00004%"
      * "x15-27"
      */
-    @Expose val chance: String,
-    @Expose val extra: List<String> = emptyList(),
+    val chance: String? = null,
+    val extra: List<String> = emptyList(),
 )

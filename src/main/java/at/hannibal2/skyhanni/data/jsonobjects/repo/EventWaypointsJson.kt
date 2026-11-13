@@ -1,15 +1,17 @@
 package at.hannibal2.skyhanni.data.jsonobjects.repo
 
 import at.hannibal2.skyhanni.utils.LorenzVec
-import com.google.gson.annotations.Expose
-import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class EventWaypointsJson(
-    @Expose val presents: Map<String, List<EventWaypointData>>,
-    @Expose @SerializedName("presents_entrances") val presentsEntrances: Map<String, List<EventWaypointData>>,
+    val presents: Map<String, List<EventWaypointData>>,
+    @SerialName("presents_entrances") val presentsEntrances: Map<String, List<EventWaypointData>>,
 )
 
+@Serializable
 data class EventWaypointData(
-    @Expose val name: String,
-    @Expose val position: LorenzVec,
+    val name: String,
+    val position: LorenzVec,
 )

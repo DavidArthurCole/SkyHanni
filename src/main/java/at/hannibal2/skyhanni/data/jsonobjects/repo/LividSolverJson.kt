@@ -1,12 +1,15 @@
 package at.hannibal2.skyhanni.data.jsonobjects.repo
 
-import com.google.gson.annotations.Expose
-import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class LividSolverJson(
-    @Expose @SerializedName("livids") val livids: Map<String, LividData>,
+    @SerialName("livids") val livids: Map<String, LividData>,
 )
+
+@Serializable
 data class LividData(
-    @Expose val skin: String,
-    @Expose val name: String,
+    val skin: String,
+    val name: String,
 )

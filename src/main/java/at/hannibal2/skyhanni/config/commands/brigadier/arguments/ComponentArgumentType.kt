@@ -2,7 +2,7 @@ package at.hannibal2.skyhanni.config.commands.brigadier.arguments
 
 import at.hannibal2.skyhanni.config.commands.brigadier.BrigadierUtils.escapeDoubleQuote
 import at.hannibal2.skyhanni.config.commands.brigadier.BrigadierUtils.readGreedyString
-import at.hannibal2.skyhanni.utils.json.SkyHanniTypeAdapters
+import at.hannibal2.skyhanni.utils.json.ComponentSerializer
 import com.google.gson.JsonParser
 import com.google.gson.TypeAdapter
 import com.mojang.brigadier.StringReader
@@ -49,9 +49,6 @@ class ComponentArgumentType(
         private val INVALID_COMPONENT =
             SimpleCommandExceptionType(Component.literal("Invalid component"))
 
-        @Suppress("UNCHECKED_CAST")
-        private val adapter: TypeAdapter<Component> by lazy {
-            SkyHanniTypeAdapters.COMPONENT.adapter as TypeAdapter<Component>
-        }
+        private val adapter: TypeAdapter<Component> get() = ComponentSerializer.adapter
     }
 }

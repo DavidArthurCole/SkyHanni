@@ -1,18 +1,21 @@
 package at.hannibal2.skyhanni.data.jsonobjects.repo
 
-import com.google.gson.annotations.Expose
-import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.JsonNames
 
+@Serializable
 data class LaunchersJson(
-    @Expose val launchers: List<LauncherEntry>,
-    @Expose @SerializedName(value = "generic_stacks", alternate = ["genericStacks"]) val genericStacks: List<String>,
+    val launchers: List<LauncherEntry>,
+    @SerialName("generic_stacks") @JsonNames("genericStacks") val genericStacks: List<String>,
 )
 
+@Serializable
 data class LauncherEntry(
-    @Expose val name: String,
-    @Expose @SerializedName(value = "first_stacks", alternate = ["firstStacks"]) val firstStacks: List<String>,
-    @Expose val brand: String? = null,
-    @Expose val flagged: Boolean = false,
+    val name: String,
+    @SerialName("first_stacks") @JsonNames("firstStacks") val firstStacks: List<String>,
+    val brand: String? = null,
+    val flagged: Boolean = false,
 ) {
     fun getIdPair() = name to flagged
 }

@@ -1,23 +1,22 @@
 package at.hannibal2.skyhanni.data.jsonobjects.elitedev
 
 import at.hannibal2.skyhanni.features.garden.CropType
-import at.hannibal2.skyhanni.utils.KSerializable
 import at.hannibal2.skyhanni.utils.SimpleTimeMark
 import at.hannibal2.skyhanni.utils.SkyBlockTime
 import at.hannibal2.skyhanni.utils.api.ApiUtils
-import com.google.gson.annotations.Expose
-import com.google.gson.annotations.SerializedName
 import kotlin.time.Duration
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
-@KSerializable
+@Serializable
 data class EliteFeastJson(
-    @Expose val current: List<String>,
-    @Expose @SerializedName("next") private val _next: Map<String, Long?>,
-    @Expose val isGrandFeast: Boolean,
+    val current: List<String>,
+    @SerialName("next") private val _next: Map<String, Long?>,
+    val isGrandFeast: Boolean,
 ) {
-    val next: Map<String, SimpleTimeMark?> = _next.mapValues { it.value?.let(SimpleTimeMark::fromUnixSeconds) }
+    val next: Map<String, SimpleTimeMark?> by lazy { _next.mapValues { it.value?.let(SimpleTimeMark::fromUnixSeconds) } }
 
-    val isComplete = current.size == 4
+    val isComplete get() = current.size == 4
 
     fun getBody(): String = ApiUtils.serializeNullsGson.toJson(this)
 
@@ -42,16 +41,16 @@ data class EliteFeastJson(
     }
 }
 
-@KSerializable
+@Serializable
 data class EliteFeastData(
-    @Expose val year: Int,
-    @Expose val month: Int,
-    @Expose val complete: Boolean,
-    @Expose val current: List<String>,
-    @Expose @SerializedName("next") private val _next: Map<String, Long?>,
-    @Expose val isGrandFeast: Boolean,
+    val year: Int,
+    val month: Int,
+    val complete: Boolean,
+    val current: List<String>,
+    @SerialName("next") private val _next: Map<String, Long?>,
+    val isGrandFeast: Boolean,
 ) {
-    val next: Map<String, SimpleTimeMark?> = _next.mapValues { it.value?.let(SimpleTimeMark::fromUnixSeconds) }
+    val next: Map<String, SimpleTimeMark?> by lazy { _next.mapValues { it.value?.let(SimpleTimeMark::fromUnixSeconds) } }
 
     private val currentMonthEndTime: SimpleTimeMark
         get() {

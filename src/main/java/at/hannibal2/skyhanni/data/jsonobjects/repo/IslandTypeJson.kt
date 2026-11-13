@@ -1,24 +1,27 @@
 package at.hannibal2.skyhanni.data.jsonobjects.repo
 
-import com.google.gson.annotations.Expose
-import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class IslandTypeJson(
-    @Expose val islands: Map<String, IslandJson>,
-    @Expose @SerializedName("max_players") val maxPlayers: Int,
-    @Expose @SerializedName("max_players_mega") val maxPlayersMega: Int,
+    val islands: Map<String, IslandJson>,
+    @SerialName("max_players") val maxPlayers: Int,
+    @SerialName("max_players_mega") val maxPlayersMega: Int,
 )
 
+@Serializable
 data class IslandJson(
-    @Expose val name: String,
-    @Expose @SerializedName("api_name") val apiName: String? = null,
-    @Expose @SerializedName("max_players") val maxPlayers: Int? = null,
-    @Expose val bounds: IslandBounds? = null,
+    val name: String,
+    @SerialName("api_name") val apiName: String? = null,
+    @SerialName("max_players") val maxPlayers: Int? = null,
+    val bounds: IslandBounds? = null,
 )
 
+@Serializable
 data class IslandBounds(
-    @Expose @SerializedName("max_x") val maxX: Int,
-    @Expose @SerializedName("min_x") val minX: Int,
-    @Expose @SerializedName("max_z") val maxZ: Int,
-    @Expose @SerializedName("min_z") val minZ: Int,
+    @SerialName("max_x") val maxX: Int,
+    @SerialName("min_x") val minX: Int,
+    @SerialName("max_z") val maxZ: Int,
+    @SerialName("min_z") val minZ: Int,
 )

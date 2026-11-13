@@ -1,13 +1,15 @@
 package at.hannibal2.skyhanni.data.jsonobjects.repo
 
 import at.hannibal2.skyhanni.utils.LorenzVec
-import com.google.gson.annotations.Expose
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class RiftWoodenButtonsJson(
-    @Expose val houses: Map<String, List<ButtonSpots>>,
+    val houses: Map<String, List<ButtonSpots>>,
 )
 
+@Serializable
 data class ButtonSpots(
-    @Expose val position: LorenzVec,
-    @Expose val buttons: List<LorenzVec>,
+    val position: LorenzVec,
+    val buttons: List<LorenzVec>,
 )

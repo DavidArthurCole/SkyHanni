@@ -1,8 +1,10 @@
 package at.hannibal2.skyhanni.data.jsonobjects.repo
 
-import com.google.gson.annotations.Expose
-import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.JsonNames
 
+@Serializable
 data class VipVisitsJson(
-    @Expose @SerializedName(value = "vip_visits", alternate = ["vipVisits"]) val vipVisits: List<String>,
+    @SerialName("vip_visits") @JsonNames("vipVisits") val vipVisits: List<String>,
 )

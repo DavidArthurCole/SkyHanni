@@ -1,14 +1,16 @@
 package at.hannibal2.skyhanni.data.jsonobjects.repo
 
 import at.hannibal2.skyhanni.utils.LorenzVec
-import com.google.gson.annotations.Expose
-import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class WiltedBerberisLocationsJson(
-    @Expose @SerializedName("field_centers") val fieldCenters: List<FieldCenter>,
+    @SerialName("field_centers") val fieldCenters: List<FieldCenter>,
 )
 
+@Serializable
 data class FieldCenter(
-    @Expose val position: LorenzVec,
-    @Expose val count: Int,
+    val position: LorenzVec,
+    val count: Int,
 )

@@ -6,7 +6,10 @@ import at.hannibal2.skyhanni.features.garden.pests.stereo.VinylType
 import at.hannibal2.skyhanni.skyhannimodule.SkyHanniModule
 import at.hannibal2.skyhanni.utils.NeuInternalName
 import at.hannibal2.skyhanni.utils.NeuInternalName.Companion.toInternalName
+import at.hannibal2.skyhanni.utils.json.PestTypeSerializer
+import kotlinx.serialization.Serializable
 
+@Serializable(with = PestTypeSerializer::class)
 enum class PestType(
     val displayName: String,
     val damageIndicatorBoss: BossType,

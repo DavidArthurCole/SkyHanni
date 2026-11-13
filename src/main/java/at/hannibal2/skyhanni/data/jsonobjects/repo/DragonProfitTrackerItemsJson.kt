@@ -1,12 +1,14 @@
 package at.hannibal2.skyhanni.data.jsonobjects.repo
 
 import at.hannibal2.skyhanni.utils.NeuInternalName
-import com.google.gson.annotations.Expose
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class DragonProfitTrackerItemsJson(
-    @Expose val items: Map<NeuInternalName, DragonProfitTrackerItemDataJson>,
+    val items: Map<NeuInternalName, DragonProfitTrackerItemDataJson>,
 )
 
+@Serializable
 data class DragonProfitTrackerItemDataJson(
-    @Expose val weight: Int,
+    val weight: Int,
 )

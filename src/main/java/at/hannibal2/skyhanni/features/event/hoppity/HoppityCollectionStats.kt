@@ -26,7 +26,6 @@ import at.hannibal2.skyhanni.utils.ItemUtils.cleanName
 import at.hannibal2.skyhanni.utils.ItemUtils.getCleanLore
 import at.hannibal2.skyhanni.utils.ItemUtils.getLore
 import at.hannibal2.skyhanni.utils.ItemUtils.setLoreString
-import at.hannibal2.skyhanni.utils.KSerializable
 import at.hannibal2.skyhanni.utils.LorenzColor
 import at.hannibal2.skyhanni.utils.LorenzRarity
 import at.hannibal2.skyhanni.utils.NeuInternalName
@@ -62,6 +61,7 @@ import at.hannibal2.skyhanni.utils.renderables.primitives.WrappedStringRenderabl
 import at.hannibal2.skyhanni.utils.repopatterns.RepoPattern
 import java.util.regex.Pattern
 import kotlin.time.Duration.Companion.seconds
+import kotlinx.serialization.Serializable
 
 private typealias RabbitData = ProfileSpecificStorage.HoppityEventStats.Companion.RabbitData
 
@@ -230,7 +230,7 @@ object HoppityCollectionStats {
         override fun toString(): String = displayName
     }
 
-    @KSerializable
+    @Serializable
     data class LocationRabbit(
         val locationName: String,
         val loreFoundCount: Int,

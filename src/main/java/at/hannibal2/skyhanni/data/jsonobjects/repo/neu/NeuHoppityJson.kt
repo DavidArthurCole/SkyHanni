@@ -1,23 +1,27 @@
 package at.hannibal2.skyhanni.data.jsonobjects.repo.neu
 
-import com.google.gson.annotations.Expose
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class NeuHoppityJson(
-    @Expose val hoppity: HoppityInfo,
+    val hoppity: HoppityInfo,
 )
 
+@Serializable
 data class HoppityInfo(
-    @Expose val rarities: Map<String, HoppityRarityInfo>,
-    @Expose val special: Map<String, MythicRabbitInfo>,
+    val rarities: Map<String, HoppityRarityInfo>,
+    val special: Map<String, MythicRabbitInfo>,
 )
 
+@Serializable
 data class HoppityRarityInfo(
-    @Expose val rabbits: List<String>,
-    @Expose val chocolate: Int,
-    @Expose val multiplier: Double,
+    val rabbits: List<String>,
+    val chocolate: Int,
+    val multiplier: Double,
 )
 
+@Serializable
 data class MythicRabbitInfo(
-    @Expose val chocolate: Int,
-    @Expose val multiplier: Double,
+    val chocolate: Int,
+    val multiplier: Double,
 )

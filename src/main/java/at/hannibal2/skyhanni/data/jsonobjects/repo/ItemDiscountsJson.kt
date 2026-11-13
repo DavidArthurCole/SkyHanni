@@ -1,18 +1,21 @@
 package at.hannibal2.skyhanni.data.jsonobjects.repo
 
-import com.google.gson.annotations.Expose
-import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class ItemDiscountsJson(
-    @Expose @SerializedName("item_price_coin_only") val itemPriceCoinOnly: Map<String, Int>,
-    @Expose @SerializedName("items_to_discount_by_area") val itemsToDiscountByArea: ItemsToDiscountByArea,
-    @Expose @SerializedName("scaling_discounts") val scalingDiscounts: ScalingDiscounts,
+    @SerialName("item_price_coin_only") val itemPriceCoinOnly: Map<String, Int>,
+    @SerialName("items_to_discount_by_area") val itemsToDiscountByArea: ItemsToDiscountByArea,
+    @SerialName("scaling_discounts") val scalingDiscounts: ScalingDiscounts,
 )
 
+@Serializable
 data class ItemsToDiscountByArea(
-    @Expose val Emissary: List<String>,
+    val Emissary: List<String>,
 )
 
+@Serializable
 data class ScalingDiscounts(
-    @Expose val Emissary: Map<String, Double>,
+    val Emissary: Map<String, Double>,
 )

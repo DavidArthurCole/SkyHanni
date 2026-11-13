@@ -6,9 +6,7 @@ import at.hannibal2.skyhanni.events.GuiKeyPressEvent
 import at.hannibal2.skyhanni.skyhannimodule.SkyHanniModule
 import at.hannibal2.skyhanni.test.command.CopyItemCommand.copyItemToClipboard
 import at.hannibal2.skyhanni.utils.ChatUtils
-import at.hannibal2.skyhanni.utils.KSerializable
 import at.hannibal2.skyhanni.utils.KeyboardManager.isKeyHeld
-import at.hannibal2.skyhanni.utils.KotlinTypeAdapterFactory
 import at.hannibal2.skyhanni.utils.OSUtils
 import at.hannibal2.skyhanni.utils.SafeItemStack
 import at.hannibal2.skyhanni.utils.json.fromJson
@@ -38,7 +36,6 @@ object TestExportTools {
 
     @PublishedApi
     internal val gson: Gson = GsonBuilder()
-        .registerTypeAdapterFactory(KotlinTypeAdapterFactory())
         .registerTypeAdapter(SafeItemStack::class.java, LegacyItemStackTypeAdapter())
         .create()
 
@@ -79,7 +76,6 @@ object TestExportTools {
 
     val Item = Key<SafeItemStack>("Item")
 
-    @KSerializable
     data class TestValue(
         val type: String,
         val data: JsonElement,
