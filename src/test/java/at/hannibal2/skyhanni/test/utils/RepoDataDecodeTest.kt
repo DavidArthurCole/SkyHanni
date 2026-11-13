@@ -221,7 +221,7 @@ class RepoDataDecodeTest {
         assumeTrue(!items.isNullOrEmpty())
         for (file in items.orEmpty()) {
             runCatching {
-                SkyHanniJson.json.decodeFromString(NeuItemJson.serializer(), file.readText())
+                SkyHanniJson.json.decodeFromString<NeuItemJson>(file.readText())
             }.onFailure { failures += "${file.name}: ${it.message?.lineSequence()?.firstOrNull()}" }
         }
         assertTrue(failures.isEmpty()) { "${failures.size} items failed:\n" + failures.take(40).joinToString("\n") }

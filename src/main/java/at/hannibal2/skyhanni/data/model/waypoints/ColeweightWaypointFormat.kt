@@ -6,7 +6,6 @@ import at.hannibal2.skyhanni.utils.json.SkyHanniJson
 import at.hannibal2.skyhanni.utils.json.WholeNumberSerializer
 import com.google.auto.service.AutoService
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.builtins.ListSerializer
 
 @AutoService(WaypointFormat::class)
 class ColeweightWaypointFormat : WaypointFormat {
@@ -25,7 +24,7 @@ class ColeweightWaypointFormat : WaypointFormat {
     }
 
     override fun load(string: String): Waypoints<SkyHanniWaypoint>? = try {
-        Waypoints(SkyHanniJson.json.decodeFromString(listSerializer, string).toMutableList()).transform { it.load() }
+        Waypoints(SkyHanniJson.json.decodeFromString<MutableList<ColeweightWaypoint>>(string)).transform { it.load() }
     } catch (e: Exception) {
         ChatUtils.debug(e.stackTraceToString())
         null
@@ -44,7 +43,7 @@ class ColeweightWaypointFormat : WaypointFormat {
     }
 
     override fun export(waypoints: Waypoints<SkyHanniWaypoint>): String =
-        SkyHanniJson.json.encodeToString(listSerializer, waypoints.transform { it.export() }.waypoints)
+        SkyHanniJson.json.encodeToString(waypoints.transform { it.export() }.waypoints)
 
     private fun SkyHanniWaypoint.export(): ColeweightWaypoint = with(location) {
         ColeweightWaypoint(
@@ -59,8 +58,4 @@ class ColeweightWaypointFormat : WaypointFormat {
     }
 
     override val name: String get() = "coleweight"
-
-    private companion object {
-        val listSerializer = ListSerializer(ColeweightWaypoint.serializer())
-    }
 }

@@ -3,6 +3,7 @@ package at.hannibal2.skyhanni.data.jsonobjects.repo.neu.recipe
 import at.hannibal2.skyhanni.utils.json.NeuRecipeTypeSerializer
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.serializer
 
 // Todo, possibly add other recipe types that are not item `recipes`/`recipe` entries,
 //  e.g., essence upgrades.
@@ -12,12 +13,12 @@ enum class NeuRecipeType(
     val useForCraftCost: Boolean = true,
     serializer: () -> KSerializer<out NeuAbstractRecipe>,
 ) {
-    FORGE("forge", serializer = { NeuForgeRecipeJson.serializer() }),
-    TRADE("trade", false, { NeuTradeRecipeJson.serializer() }),
-    MOB_DROP("drops", false, { NeuMobDropsRecipeJson.serializer() }),
-    NPC_SHOP("npc_shop", serializer = { NeuNpcShopRecipeJson.serializer() }),
-    KAT_UPGRADE("katgrade", false, { NeuKatUpgradeRecipeJson.serializer() }),
-    CRAFTING("crafting", serializer = { NeuCraftingRecipeJson.serializer() }),
+    FORGE("forge", serializer = { serializer<NeuForgeRecipeJson>() }),
+    TRADE("trade", false, { serializer<NeuTradeRecipeJson>() }),
+    MOB_DROP("drops", false, { serializer<NeuMobDropsRecipeJson>() }),
+    NPC_SHOP("npc_shop", serializer = { serializer<NeuNpcShopRecipeJson>() }),
+    KAT_UPGRADE("katgrade", false, { serializer<NeuKatUpgradeRecipeJson>() }),
+    CRAFTING("crafting", serializer = { serializer<NeuCraftingRecipeJson>() }),
     ;
 
     val recipeSerializer: KSerializer<out NeuAbstractRecipe> by lazy(serializer)

@@ -141,7 +141,7 @@ object EnoughUpdatesManager {
     }
 
     private fun parseItem(json: String): NeuItemJson? {
-        val itemJson = runCatching { SkyHanniJson.json.decodeFromString(NeuItemJson.serializer(), json) }.getOrNull() ?: return null
+        val itemJson = runCatching { SkyHanniJson.json.decodeFromString<NeuItemJson>(json) }.getOrNull() ?: return null
         itemJson.itemId.getVanillaItem()?.let { mcItem ->
             itemJson.itemId = mcItem.getIdentifierString()
         }

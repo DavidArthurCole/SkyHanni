@@ -134,8 +134,8 @@ data class CustomTodo(
         const val MS_IN_A_DAY = (24 * 60 * 60 * 1000)
 
         fun fromTemplateOrNull(data: String, printErrors: Boolean = false): CustomTodo? {
-            val maybeDecoded = TemplateUtil.maybeDecodeTemplate(TEMPLATE_PREFIX, data, serializer())
-                ?: TemplateUtil.maybeDecodeTemplate(NEU_TEMPLATE_PREFIX, data, serializer())
+            val maybeDecoded = TemplateUtil.maybeDecodeTemplate<CustomTodo>(TEMPLATE_PREFIX, data)
+                ?: TemplateUtil.maybeDecodeTemplate<CustomTodo>(NEU_TEMPLATE_PREFIX, data)
             if (maybeDecoded == null && printErrors) {
                 ChatUtils.userError("Invalid Todo")
             }
@@ -158,7 +158,6 @@ data class CustomTodo(
     fun toTemplate(): String {
         return TemplateUtil.encodeTemplate(
             TEMPLATE_PREFIX,
-            serializer(),
             this.copy(readyAt = mutableMapOf(), triggersLeft = mutableMapOf(), downloaded = false, downloadedId = ""),
         )
     }

@@ -2,12 +2,12 @@ package at.hannibal2.skyhanni.utils
 
 import at.hannibal2.skyhanni.utils.json.SkyHanniJson
 import java.util.Base64
-import kotlinx.serialization.KSerializer
 import kotlinx.serialization.json.Json
 
 // Taken and modified from Not Enough Updates https://github.com/NotEnoughUpdates/NotEnoughUpdates
 object TemplateUtil {
-    private val json = Json(SkyHanniJson.json) { prettyPrint = false }
+    @PublishedApi
+    internal val json = Json(SkyHanniJson.json) { prettyPrint = false }
 
     @JvmStatic
     fun getTemplatePrefix(data: String): String? {
@@ -54,14 +54,12 @@ object TemplateUtil {
         return rawEncoded.substring(0, rawEncoded.length - rawEncoded.length % 4)
     }
 
-    @JvmStatic
-    fun <T : Any> encodeTemplate(sharePrefix: String, serializer: KSerializer<T>, data: T): String {
+    inline fun <reified T : Any> encodeTemplate(sharePrefix: String, data: T): String {
         require(sharePrefix.endsWith("/"))
-        return intoBase64Encoded(sharePrefix + json.encodeToString(serializer, data))
+        return intoBase64Encoded(sharePrefix + json.encodeToString(data))
     }
 
-    @JvmStatic
-    fun <T : Any> maybeDecodeTemplate(sharePrefix: String, data: String, serializer: KSerializer<T>): T? {
+    inline fun <reified T : Any> maybeDecodeTemplate(sharePrefix: String, data: String): T? {
         require(sharePrefix.endsWith("/"))
         val trimmed = data.trim()
         if (!trimmed.startsWith(getPrefixComparisonSafeBase64Encoding(sharePrefix)))
@@ -70,7 +68,7 @@ object TemplateUtil {
         if (!decoded.startsWith(sharePrefix))
             return null
         return try {
-            json.decodeFromString(serializer, decoded.substring(sharePrefix.length))
+            json.decodeFromString<T>(decoded.substring(sharePrefix.length))
         } catch (e: Exception) {
             null
         }

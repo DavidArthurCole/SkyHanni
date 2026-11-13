@@ -8,6 +8,7 @@ import at.hannibal2.skyhanni.test.command.ErrorManager
 import at.hannibal2.skyhanni.utils.json.JsonTreeBridge.toKotlinx
 import at.hannibal2.skyhanni.utils.json.SkyHanniJson
 import com.google.gson.JsonObject
+import kotlinx.serialization.json.decodeFromJsonElement
 
 @SkyHanniModule
 object SkyBlockAPIEventWrappers {
@@ -16,7 +17,7 @@ object SkyBlockAPIEventWrappers {
     fun onPvLoad(data: JsonObject) {
         try {
             // SbPv only sends the active/selected profile, not all profiles
-            val profileData = SkyHanniJson.json.decodeFromJsonElement(HypixelApiProfile.serializer(), data.toKotlinx())
+            val profileData = SkyHanniJson.json.decodeFromJsonElement<HypixelApiProfile>(data.toKotlinx())
             val playerData = HypixelPlayerApiJson(listOf(profileData))
 
             ProfileViewerDataLoadedEvent(playerData).post()

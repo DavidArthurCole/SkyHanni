@@ -8,7 +8,6 @@ import java.io.ByteArrayInputStream
 import java.util.Base64
 import java.util.zip.GZIPInputStream
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.builtins.ListSerializer
 
 @AutoService(WaypointFormat::class)
 class SkytilsWaypointFormat : WaypointFormat {
@@ -28,7 +27,7 @@ class SkytilsWaypointFormat : WaypointFormat {
     override fun load(string: String): Waypoints<SkyHanniWaypoint>? {
         val json = decodeInput(string) ?: return null
         return try {
-            val list = SkyHanniJson.json.decodeFromString(listSerializer, json)
+            val list = SkyHanniJson.json.decodeFromString<List<SkytilsWaypoint>>(json)
             val waypoints = list.mapIndexed { index, wp ->
                 val number = index + 1
                 SkyHanniWaypoint(
@@ -72,13 +71,12 @@ class SkytilsWaypointFormat : WaypointFormat {
                 z = wp.location.z,
             )
         }
-        return SkyHanniJson.json.encodeToString(listSerializer, list)
+        return SkyHanniJson.json.encodeToString(list)
     }
 
     override val name: String get() = "skytils"
 
     private companion object {
-        val listSerializer = ListSerializer(SkytilsWaypoint.serializer())
         const val V1_HEADER = "<Skytils-Waypoint-Data>(V1):"
     }
 }
